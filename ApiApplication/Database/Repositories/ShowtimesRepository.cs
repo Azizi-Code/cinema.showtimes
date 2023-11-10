@@ -1,10 +1,5 @@
 ﻿using ApiApplication.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 using ApiApplication.Database.Repositories.Abstractions;
 

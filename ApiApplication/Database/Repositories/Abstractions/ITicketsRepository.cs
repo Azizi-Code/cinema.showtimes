@@ -1,8 +1,4 @@
 ﻿using ApiApplication.Database.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ApiApplication.Database.Repositories.Abstractions
 {

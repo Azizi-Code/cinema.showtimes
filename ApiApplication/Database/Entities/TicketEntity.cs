@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ApiApplication.Database.Entities
+﻿namespace ApiApplication.Database.Entities
 {
     public class TicketEntity
     {

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ApiApplication.Database.Entities
+﻿namespace ApiApplication.Database.Entities
 {
     public class AuditoriumEntity
     {
