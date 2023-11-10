@@ -3,6 +3,7 @@ using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 namespace ApiApplication
 {
@@ -31,6 +32,12 @@ namespace ApiApplication
             services.AddControllers();
 
             services.AddHttpClient();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+                    new OpenApiInfo { Title = "Application.Api", Version = "v1" });
+                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,13 +53,16 @@ namespace ApiApplication
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                endpoints.MapControllers();
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Application.Api");
             });
+            
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             SampleData.Initialize(app);
-        }      
+        }
     }
 }
