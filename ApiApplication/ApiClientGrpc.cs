@@ -1,10 +1,19 @@
-﻿using Grpc.Net.Client;
+﻿using ApiApplication.Constants;
+using Grpc.Core;
+using Grpc.Net.Client;
 using ProtoDefinitions;
 
 namespace ApiApplication
 {
-    public class ApiClientGrpc
+    public class MoviesApiClientGrpc : IMoviesApiClient
     {
+        private readonly IConfiguration _configuration;
+
+        public MoviesApiClientGrpc(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task<showListResponse> GetAll()
         {
             var httpHandler = new HttpClientHandler
@@ -13,16 +22,21 @@ namespace ApiApplication
                     HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             };
 
-            var channel =
-                GrpcChannel.ForAddress("https://localhost:7443", new GrpcChannelOptions()
+            var channel = GrpcChannel.ForAddress("https://localhost:7443", new GrpcChannelOptions
                 {
                     HttpHandler = httpHandler
                 });
             var client = new MoviesApi.MoviesApiClient(channel);
+            var apiKeyHeaderValue = _configuration.GetValue<string>(ApplicationConstant.ApiKeyName);
+            var headers = new Metadata { { ApplicationConstant.ApiKeyHeaderName, apiKeyHeaderValue} };
+            var all = await client.GetAllAsync(new Empty(), headers);
+            if (all.Success)
+            {
+                all.Data.TryUnpack<showListResponse>(out var data);
+                return data;
+            }
 
-            var all = await client.GetAllAsync(new Empty());
-            all.Data.TryUnpack<showListResponse>(out var data);
-            return data;
+            return null;
         }
     }
 }

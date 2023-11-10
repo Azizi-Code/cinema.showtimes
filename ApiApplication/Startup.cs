@@ -22,6 +22,8 @@ namespace ApiApplication
             services.AddTransient<IShowtimesRepository, ShowtimesRepository>();
             services.AddTransient<ITicketsRepository, TicketsRepository>();
             services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
+            services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
+
 
             services.AddDbContext<CinemaContext>(options =>
             {
