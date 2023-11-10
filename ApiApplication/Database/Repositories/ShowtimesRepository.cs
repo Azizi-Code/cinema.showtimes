@@ -16,14 +16,14 @@ namespace ApiApplication.Database.Repositories
 
         public async Task<ShowtimeEntity> GetWithMoviesByIdAsync(int id, CancellationToken cancel)
         {
-            return await _context.Showtimes
+            return await _context.ShowTimes
                 .Include(x => x.Movie)
                 .FirstOrDefaultAsync(x => x.Id == id, cancel);
         }
 
         public async Task<ShowtimeEntity> GetWithTicketsByIdAsync(int id, CancellationToken cancel)
         {
-            return await _context.Showtimes
+            return await _context.ShowTimes
                 .Include(x => x.Tickets)
                 .FirstOrDefaultAsync(x => x.Id == id, cancel);
         }
@@ -32,11 +32,11 @@ namespace ApiApplication.Database.Repositories
         {
             if (filter == null)
             {
-                return await _context.Showtimes
+                return await _context.ShowTimes
                 .Include(x => x.Movie)
                 .ToListAsync(cancel);
             }
-            return await _context.Showtimes
+            return await _context.ShowTimes
                 .Include(x => x.Movie)
                 .Where(filter)
                 .ToListAsync(cancel);
@@ -44,7 +44,7 @@ namespace ApiApplication.Database.Repositories
 
         public async Task<ShowtimeEntity> CreateShowtime(ShowtimeEntity showtimeEntity, CancellationToken cancel)
         {
-            var showtime = await _context.Showtimes.AddAsync(showtimeEntity, cancel);
+            var showtime = await _context.ShowTimes.AddAsync(showtimeEntity, cancel);
             await _context.SaveChangesAsync(cancel);
             return showtime.Entity;
         }
