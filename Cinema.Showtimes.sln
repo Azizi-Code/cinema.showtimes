@@ -3,15 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Showtimes.Api", "Cinema.Showtimes.Api\Cinema.Showtimes.Api.csproj", "{979FF842-D59A-44BD-A726-4850A4B9647A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Showtimes.Api", "src\Cinema.Showtimes.Api\Cinema.Showtimes.Api.csproj", "{979FF842-D59A-44BD-A726-4850A4B9647A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7B7247A-2A34-442B-ABD6-F2053B6B3C24}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8D499BFD-E77F-4A6A-976E-8AFA93AD8FC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5F0AC74B-3F28-423E-A0D5-8ADC96B9DECF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Showtimes.Api.Tests", "tests\Cinema.Showtimes.Api.Tests\Cinema.Showtimes.Api.Tests.csproj", "{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Showtimes.Api.IntegrationTests", "tests\Cinema.Showtimes.Api.IntegrationTests\Cinema.Showtimes.Api.IntegrationTests.csproj", "{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "solutionItems", "{A30D7CB1-29D6-4FD7-8D4F-9455DB9A0214}"
 	ProjectSection(SolutionItems) = preProject
-		cUrls.txt = cUrls.txt
-		docker-compose.yaml = docker-compose.yaml
-		Feedback.md = Feedback.md
-		Readme.md = Readme.md
-		.gitignore = .gitignore
+		cUrls.txt = solutionItems\cUrls.txt
+		docker-compose.yaml = solutionItems\docker-compose.yaml
+		Feedback.md = solutionItems\Feedback.md
+		Readme.md = solutionItems\Readme.md
 	EndProjectSection
 EndProject
 Global
@@ -24,11 +31,24 @@ Global
 		{979FF842-D59A-44BD-A726-4850A4B9647A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{979FF842-D59A-44BD-A726-4850A4B9647A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{979FF842-D59A-44BD-A726-4850A4B9647A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C52A7E7E-4F02-4B44-B7D4-995DE72CF0B3}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{979FF842-D59A-44BD-A726-4850A4B9647A} = {8D499BFD-E77F-4A6A-976E-8AFA93AD8FC2}
+		{C28C540C-00E3-4C4E-9E1F-8DA3E74462DC} = {5F0AC74B-3F28-423E-A0D5-8ADC96B9DECF}
+		{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD} = {5F0AC74B-3F28-423E-A0D5-8ADC96B9DECF}
 	EndGlobalSection
 EndGlobal
