@@ -14,7 +14,7 @@ namespace ApiApplication
             _configuration = configuration;
         }
 
-        public async Task<showListResponse> GetAll()
+        public async Task<showListResponse> GetAllAsync()
         {
             var httpHandler = new HttpClientHandler
             {
@@ -35,7 +35,6 @@ namespace ApiApplication
                 all.Data.TryUnpack<showListResponse>(out var data);
                 return data;
             }
-
             return null;
         }
     }

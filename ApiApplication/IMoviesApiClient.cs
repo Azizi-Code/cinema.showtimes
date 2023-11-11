@@ -4,5 +4,5 @@ namespace ApiApplication;
 
 public interface IMoviesApiClient
 {
-    Task<showListResponse> GetAll();
+    Task<showListResponse> GetAllAsync();
 }
