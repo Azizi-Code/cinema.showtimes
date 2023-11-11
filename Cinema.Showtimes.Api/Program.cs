@@ -1,4 +1,4 @@
-namespace ApiApplication
+namespace Cinema.Showtimes.Api
 {
     public class Program
     {

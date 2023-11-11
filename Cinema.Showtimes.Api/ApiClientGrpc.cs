@@ -1,9 +1,9 @@
-﻿using ApiApplication.Constants;
+﻿using Cinema.Showtimes.Api.Constants;
 using Grpc.Core;
 using Grpc.Net.Client;
 using ProtoDefinitions;
 
-namespace ApiApplication
+namespace Cinema.Showtimes.Api
 {
     public class MoviesApiClientGrpc : IMoviesApiClient
     {

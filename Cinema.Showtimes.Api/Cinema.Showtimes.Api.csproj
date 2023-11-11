@@ -6,6 +6,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Cinema.Showtimes.Api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +20,10 @@
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.59.0" />
     <Protobuf Include="movies.proto" GrpcServices="Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

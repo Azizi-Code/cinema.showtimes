@@ -1,9 +1,9 @@
-﻿using ApiApplication.Database.Entities;
+﻿using System.Linq.Expressions;
+using Cinema.Showtimes.Api.Database.Entities;
+using Cinema.Showtimes.Api.Database.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using ApiApplication.Database.Repositories.Abstractions;
 
-namespace ApiApplication.Database.Repositories
+namespace Cinema.Showtimes.Api.Database.Repositories
 {
     public class ShowtimesRepository : IShowtimesRepository
     {

@@ -1,6 +1,6 @@
-﻿using ApiApplication.Database.Entities;
+﻿using Cinema.Showtimes.Api.Database.Entities;
 
-namespace ApiApplication.Database.Repositories.Abstractions
+namespace Cinema.Showtimes.Api.Database.Repositories.Abstractions
 {
     public interface ITicketsRepository
     {

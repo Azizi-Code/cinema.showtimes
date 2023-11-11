@@ -1,6 +1,6 @@
 using ProtoDefinitions;
 
-namespace ApiApplication;
+namespace Cinema.Showtimes.Api;
 
 public interface IMoviesApiClient
 {

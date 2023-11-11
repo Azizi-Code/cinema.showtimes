@@ -1,11 +1,11 @@
-using ApiApplication.Database;
-using ApiApplication.Database.Repositories;
-using ApiApplication.Database.Repositories.Abstractions;
+using Cinema.Showtimes.Api.Database;
+using Cinema.Showtimes.Api.Database.Repositories;
+using Cinema.Showtimes.Api.Database.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 
-namespace ApiApplication
+namespace Cinema.Showtimes.Api
 {
     public class Startup
     {

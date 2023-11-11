@@ -1,8 +1,8 @@
-﻿using ApiApplication.Database.Entities;
+﻿using Cinema.Showtimes.Api.Database.Entities;
+using Cinema.Showtimes.Api.Database.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using ApiApplication.Database.Repositories.Abstractions;
 
-namespace ApiApplication.Database.Repositories
+namespace Cinema.Showtimes.Api.Database.Repositories
 {
     public class TicketsRepository : ITicketsRepository
     {

@@ -1,6 +1,6 @@
-﻿using ApiApplication.Database.Entities;
+﻿using Cinema.Showtimes.Api.Database.Entities;
 
-namespace ApiApplication.Database
+namespace Cinema.Showtimes.Api.Database
 {
     public class SampleData
     {

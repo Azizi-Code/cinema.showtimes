@@ -1,4 +1,4 @@
-namespace ApiApplication.Constants;
+namespace Cinema.Showtimes.Api.Constants;
 
 public static class ApplicationConstant
 {

@@ -1,4 +1,4 @@
-﻿namespace ApiApplication.Database.Entities
+﻿namespace Cinema.Showtimes.Api.Database.Entities
 {
     public class ShowtimeEntity
     {
