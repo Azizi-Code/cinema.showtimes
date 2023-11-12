@@ -1,6 +1,8 @@
 using Cinema.Showtimes.Api.Application.Caching;
 using Cinema.Showtimes.Api.Application.Clients;
 using Cinema.Showtimes.Api.Application.Constants;
+using Cinema.Showtimes.Api.Application.Middlewares;
+using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.Caching;
 using Cinema.Showtimes.Api.Infrastructure.Database;
@@ -31,6 +33,7 @@ public class Startup
             ConnectionMultiplexer.Connect(Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey) ??
                                           throw new ApplicationException("Redis connection didn't set properly.")));
         services.AddSingleton<ICacheService, RedisCacheService>();
+        services.AddScoped<IMoviesService, MoviesService>();
 
         services.AddDbContext<CinemaContext>(options =>
         {
@@ -44,8 +47,10 @@ public class Startup
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1",
-                new OpenApiInfo { Title = "Application.Api", Version = "v1" });
+                new OpenApiInfo { Title = "Cinema.Showtimes.Api", Version = "v1" });
         });
+
+        services.AddLogging();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,10 +67,13 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseMiddleware<LogRequestTimeMiddleware>();
+
         app.UseSwagger();
-        app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Application.Api"); });
+        app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cinema.Showtimes.Api"); });
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
 
         SampleData.Initialize(app);
     }
