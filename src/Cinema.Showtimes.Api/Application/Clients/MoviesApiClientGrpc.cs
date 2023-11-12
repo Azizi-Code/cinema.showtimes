@@ -9,32 +9,64 @@ public class MoviesApiClientGrpc : IMoviesApiClient
 {
     private readonly IConfiguration _configuration;
 
-    public MoviesApiClientGrpc(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+    public MoviesApiClientGrpc(IConfiguration configuration) => _configuration = configuration;
 
     public async Task<showListResponse> GetAllAsync()
     {
-        var httpHandler = new HttpClientHandler
+        var moviesApiClient = GetMoviesApiClient();
+        var apiKeyHeader = GetApiKeyHeader();
+
+        var response = await moviesApiClient.GetAllAsync(new Empty(), apiKeyHeader);
+        if (response.Success)
+        {
+            response.Data.TryUnpack<showListResponse>(out var data);
+            return data;
+        }
+
+        return null;
+    }
+
+    public async Task<showResponse?> GetByIdAsync(string movieId)
+    {
+        try
+        {
+            var moviesApiClient = GetMoviesApiClient();
+            var apiKeyHeader = GetApiKeyHeader();
+
+            var response = await moviesApiClient.GetByIdAsync(new IdRequest { Id = movieId }, apiKeyHeader);
+            
+            if (!response.Success) return null;
+            response.Data.TryUnpack<showResponse>(out var data);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private MoviesApi.MoviesApiClient GetMoviesApiClient()
+    {
+        using var httpHandler = new HttpClientHandler
         {
             ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
 
-        var channel = GrpcChannel.ForAddress("https://localhost:7443", new GrpcChannelOptions
+        using var channel = GrpcChannel.ForAddress(ApplicationConstant.MovieApiAddress, new GrpcChannelOptions
         {
             HttpHandler = httpHandler
         });
-        var client = new MoviesApi.MoviesApiClient(channel);
+
+        return new MoviesApi.MoviesApiClient(channel);
+    }
+
+    private Metadata GetApiKeyHeader()
+    {
         var apiKeyHeaderValue = _configuration.GetValue<string>(ApplicationConstant.ApiKeyName);
-        var headers = new Metadata { { ApplicationConstant.ApiKeyHeaderName, apiKeyHeaderValue} };
-        var all = await client.GetAllAsync(new Empty(), headers);
-        if (all.Success)
-        {
-            all.Data.TryUnpack<showListResponse>(out var data);
-            return data;
-        }
-        return null;
+
+        return apiKeyHeaderValue != null
+            ? new Metadata { { ApplicationConstant.ApiKeyHeaderName, apiKeyHeaderValue } }
+            : throw new ArgumentNullException();
     }
 }
