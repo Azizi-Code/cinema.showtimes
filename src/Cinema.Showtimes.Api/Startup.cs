@@ -1,9 +1,13 @@
+using Cinema.Showtimes.Api.Application.Caching;
 using Cinema.Showtimes.Api.Application.Clients;
+using Cinema.Showtimes.Api.Application.Constants;
 using Cinema.Showtimes.Api.Domain.Repositories;
+using Cinema.Showtimes.Api.Infrastructure.Caching;
 using Cinema.Showtimes.Api.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace Cinema.Showtimes.Api;
 
@@ -23,7 +27,10 @@ public class Startup
         services.AddTransient<ITicketsRepository, TicketsRepository>();
         services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
         services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
-
+        services.AddSingleton<IConnectionMultiplexer>(x =>
+            ConnectionMultiplexer.Connect(Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey) ??
+                                          throw new ApplicationException("Redis connection didn't set properly.")));
+        services.AddSingleton<ICacheService, RedisCacheService>();
 
         services.AddDbContext<CinemaContext>(options =>
         {
@@ -38,7 +45,6 @@ public class Startup
         {
             options.SwaggerDoc("v1",
                 new OpenApiInfo { Title = "Application.Api", Version = "v1" });
-                
         });
     }
 
@@ -55,13 +61,10 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-            
+
         app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Application.Api");
-        });
-            
+        app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Application.Api"); });
+
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
         SampleData.Initialize(app);
