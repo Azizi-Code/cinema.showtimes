@@ -8,7 +8,7 @@ namespace Cinema.Showtimes.Api.Application.Services;
 
 public interface IMoviesService
 {
-    Task<showResponse?> GetByIdAsync(string id);
+    Task<showResponse?> GetByIdAsync(string id, CancellationToken cancellationToken);
 }
 
 public class MoviesService : IMoviesService
@@ -22,11 +22,11 @@ public class MoviesService : IMoviesService
         _cacheService = Throw.ArgumentNullException.IfNull(cacheService, nameof(cacheService));
     }
 
-    public async Task<showResponse?> GetByIdAsync(string id)
+    public async Task<showResponse?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         try
         {
-            var movie = await _moviesApiClient.GetByIdAsync(id);
+            var movie = await _moviesApiClient.GetByIdAsync(id, cancellationToken);
             if (movie != null)
             {
                 await _cacheService.SetAsync(id, movie);

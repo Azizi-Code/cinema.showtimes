@@ -19,11 +19,11 @@ public class ShowtimesController : Controller
     }
 
     [HttpGet("id")]
-    public async Task<IActionResult> GetMovieById(string id)
+    public async Task<IActionResult> GetMovieById(string id, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _moviesService.GetByIdAsync(id);
+            var result = await _moviesService.GetByIdAsync(id, cancellationToken);
             return Ok(result);
         }
         catch (Exception exception)

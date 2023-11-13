@@ -32,14 +32,15 @@ public class MoviesApiClientGrpc : IMoviesApiClient
         }
     }
 
-    public async Task<showResponse?> GetByIdAsync(string movieId)
+    public async Task<showResponse?> GetByIdAsync(string movieId, CancellationToken cancellationToken = default)
     {
         try
         {
             var moviesApiClient = GetMoviesApiClient();
             var apiKeyHeader = GetApiKeyHeader();
 
-            var response = await moviesApiClient.GetByIdAsync(new IdRequest { Id = movieId }, apiKeyHeader);
+            var response = await moviesApiClient.GetByIdAsync(new IdRequest { Id = movieId }, apiKeyHeader,
+                cancellationToken: cancellationToken);
 
             response.Data.TryUnpack<showResponse>(out var data);
             return data;
