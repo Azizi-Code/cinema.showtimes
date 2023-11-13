@@ -12,39 +12,38 @@ public class SampleData
 
 
         context.Auditoriums.Add(new AuditoriumEntity
-        {
-            Id = 1,
-            Showtimes = new List<ShowtimeEntity>
+        (
+            1,
+            new List<ShowtimeEntity>
             {
                 new ShowtimeEntity
-                {
-                    Id = 1,
-                    SessionDate = new DateTime(2023, 1, 1),
-                    Movie = new MovieEntity
-                    {
-                        Id = 1,
-                        Title = "Inception",
-                        ImdbId = "tt1375666",
-                        ReleaseDate = new DateTime(2010, 01, 14),
-                        Stars = "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Ken Watanabe"
-                    },
-                    AuditoriumId = 1,
-                }
+                (
+                    1,
+                    new MovieEntity(
+                        1,
+                        "Inception",
+                        "tt1375666",
+                        "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Ken Watanabe",
+                        new DateTime(2010, 01, 14)
+                    )
+                    ,
+                    new DateTime(2023, 1, 1),
+                    1
+                )
             },
-            Seats = GenerateSeats(1, 28, 22)
-        });
+            GenerateSeats(1, 28, 22)
+        ));
+
+        context.Auditoriums.Add(new AuditoriumEntity(
+            2,
+            GenerateSeats(2, 21, 18)
+        ));
 
         context.Auditoriums.Add(new AuditoriumEntity
-        {
-            Id = 2,
-            Seats = GenerateSeats(2, 21, 18)
-        });
-
-        context.Auditoriums.Add(new AuditoriumEntity
-        {
-            Id = 3,
-            Seats = GenerateSeats(3, 15, 21)
-        });
+        (
+            3,
+            GenerateSeats(3, 15, 21)
+        ));
 
         context.SaveChanges();
     }
@@ -54,7 +53,7 @@ public class SampleData
         var seats = new List<SeatEntity>();
         for (short r = 1; r <= rows; r++)
         for (short s = 1; s <= seatsPerRow; s++)
-            seats.Add(new SeatEntity { AuditoriumId = auditoriumId, Row = r, SeatNumber = s });
+            seats.Add(new SeatEntity(auditoriumId, r, s));
 
         return seats;
     }
