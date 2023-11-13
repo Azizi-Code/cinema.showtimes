@@ -28,7 +28,8 @@ public class ShowtimesRepository : IShowtimesRepository
             .FirstOrDefaultAsync(x => x.Id == id, cancel);
     }
 
-    public async Task<IEnumerable<ShowtimeEntity>> GetAllAsync(Expression<Func<ShowtimeEntity, bool>> filter, CancellationToken cancel)
+    public async Task<IEnumerable<ShowtimeEntity>> GetAllAsync(Expression<Func<ShowtimeEntity, bool>> filter,
+        CancellationToken cancel)
     {
         if (filter == null)
         {
@@ -36,6 +37,7 @@ public class ShowtimesRepository : IShowtimesRepository
                 .Include(x => x.Movie)
                 .ToListAsync(cancel);
         }
+
         return await _context.ShowTimes
             .Include(x => x.Movie)
             .Where(filter)

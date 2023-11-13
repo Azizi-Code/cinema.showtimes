@@ -7,7 +7,6 @@ public class CinemaContext : DbContext
 {
     public CinemaContext(DbContextOptions<CinemaContext> options) : base(options)
     {
-            
     }
 
     public DbSet<AuditoriumEntity> Auditoriums { get; set; }
@@ -27,7 +26,8 @@ public class CinemaContext : DbContext
         modelBuilder.Entity<SeatEntity>(build =>
         {
             build.HasKey(entry => new { entry.AuditoriumId, entry.Row, entry.SeatNumber });
-            build.HasOne(entry => entry.Auditorium).WithMany(entry => entry.Seats).HasForeignKey(entry => entry.AuditoriumId);
+            build.HasOne(entry => entry.Auditorium).WithMany(entry => entry.Seats)
+                .HasForeignKey(entry => entry.AuditoriumId);
         });
 
         modelBuilder.Entity<ShowtimeEntity>(build =>
@@ -35,7 +35,8 @@ public class CinemaContext : DbContext
             build.HasKey(entry => entry.Id);
             build.Property(entry => entry.Id).ValueGeneratedOnAdd();
             build.HasOne(entry => entry.Movie).WithMany(entry => entry.Showtimes);
-            build.HasMany(entry => entry.Tickets).WithOne(entry => entry.Showtime).HasForeignKey(entry => entry.ShowtimeId);
+            build.HasMany(entry => entry.Tickets).WithOne(entry => entry.Showtime)
+                .HasForeignKey(entry => entry.ShowtimeId);
         });
 
         modelBuilder.Entity<MovieEntity>(build =>

@@ -10,7 +10,7 @@ public class ShowtimesController : Controller
 {
     private readonly IMoviesService _moviesService;
     private readonly IActionResultMapper<ShowtimesController> _actionResultMapper;
-    
+
     public ShowtimesController(IMoviesService moviesService,
         IActionResultMapper<ShowtimesController> actionResultMapper)
     {

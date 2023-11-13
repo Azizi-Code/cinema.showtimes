@@ -11,10 +11,7 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.ConfigureLogging(options =>
-                {
-                    options.AddConsole();
-                });
-                webBuilder.UseStartup<Startup>();                    
+                webBuilder.ConfigureLogging(options => { options.AddConsole(); });
+                webBuilder.UseStartup<Startup>();
             });
 }

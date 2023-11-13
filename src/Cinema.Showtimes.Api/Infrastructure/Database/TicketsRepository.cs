@@ -27,7 +27,8 @@ public class TicketsRepository : ITicketsRepository
             .ToListAsync(cancel);
     }
 
-    public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats, CancellationToken cancel)
+    public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
+        CancellationToken cancel)
     {
         var ticket = _context.Tickets.Add(new TicketEntity
         {

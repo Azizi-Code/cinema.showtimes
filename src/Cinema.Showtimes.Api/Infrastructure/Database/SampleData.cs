@@ -9,13 +9,13 @@ public class SampleData
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var context = serviceScope.ServiceProvider.GetService<CinemaContext>();
         context.Database.EnsureCreated();
-            
+
 
         context.Auditoriums.Add(new AuditoriumEntity
         {
             Id = 1,
-            Showtimes = new List<ShowtimeEntity> 
-            { 
+            Showtimes = new List<ShowtimeEntity>
+            {
                 new ShowtimeEntity
                 {
                     Id = 1,
@@ -26,10 +26,10 @@ public class SampleData
                         Title = "Inception",
                         ImdbId = "tt1375666",
                         ReleaseDate = new DateTime(2010, 01, 14),
-                        Stars = "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Ken Watanabe"                            
+                        Stars = "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Ken Watanabe"
                     },
                     AuditoriumId = 1,
-                } 
+                }
             },
             Seats = GenerateSeats(1, 28, 22)
         });
