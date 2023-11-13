@@ -1,4 +1,6 @@
 ﻿using Cinema.Showtimes.Api.Application.Constants;
+using Cinema.Showtimes.Api.Application.Exceptions;
+using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
 using Grpc.Core;
 using Grpc.Net.Client;
 using ProtoDefinitions;
@@ -9,21 +11,25 @@ public class MoviesApiClientGrpc : IMoviesApiClient
 {
     private readonly IConfiguration _configuration;
 
-    public MoviesApiClientGrpc(IConfiguration configuration) => _configuration = configuration;
+    public MoviesApiClientGrpc(IConfiguration configuration) =>
+        _configuration = Throw.ArgumentNullException.IfNull(configuration, nameof(configuration));
 
     public async Task<showListResponse> GetAllAsync()
     {
-        var moviesApiClient = GetMoviesApiClient();
-        var apiKeyHeader = GetApiKeyHeader();
-
-        var response = await moviesApiClient.GetAllAsync(new Empty(), apiKeyHeader);
-        if (response.Success)
+        try
         {
+            var moviesApiClient = GetMoviesApiClient();
+            var apiKeyHeader = GetApiKeyHeader();
+
+            var response = await moviesApiClient.GetAllAsync(new Empty(), apiKeyHeader);
+
             response.Data.TryUnpack<showListResponse>(out var data);
             return data;
         }
-
-        return null;
+        catch (Exception ex)
+        {
+            throw new MovieApiException($"process for fetching all movie data failed. Error message => {ex.Message}");
+        }
     }
 
     public async Task<showResponse?> GetByIdAsync(string movieId)
@@ -34,26 +40,25 @@ public class MoviesApiClientGrpc : IMoviesApiClient
             var apiKeyHeader = GetApiKeyHeader();
 
             var response = await moviesApiClient.GetByIdAsync(new IdRequest { Id = movieId }, apiKeyHeader);
-            
-            if (!response.Success) return null;
+
             response.Data.TryUnpack<showResponse>(out var data);
             return data;
         }
-        catch
+        catch (RpcException ex)
         {
-            return null;
+            throw new MovieApiException($"process for fetching movie data failed. Error message => {ex.Message}");
         }
     }
 
     private MoviesApi.MoviesApiClient GetMoviesApiClient()
     {
-        using var httpHandler = new HttpClientHandler
+        var httpHandler = new HttpClientHandler
         {
             ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
 
-        using var channel = GrpcChannel.ForAddress(ApplicationConstant.MovieApiAddress, new GrpcChannelOptions
+        var channel = GrpcChannel.ForAddress(ApplicationConstant.MovieApiAddress, new GrpcChannelOptions
         {
             HttpHandler = httpHandler
         });
@@ -67,6 +72,6 @@ public class MoviesApiClientGrpc : IMoviesApiClient
 
         return apiKeyHeaderValue != null
             ? new Metadata { { ApplicationConstant.ApiKeyHeaderName, apiKeyHeaderValue } }
-            : throw new ArgumentNullException();
+            : throw new Exception("The value for ApiKey header can't be null.");
     }
 }
