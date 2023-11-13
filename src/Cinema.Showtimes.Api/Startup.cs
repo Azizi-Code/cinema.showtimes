@@ -26,14 +26,18 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddTransient<IShowtimesRepository, ShowtimesRepository>();
-        services.AddTransient<ITicketsRepository, TicketsRepository>();
-        services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
+        services.AddScoped<IShowtimesRepository, ShowtimesRepository>();
+        services.AddScoped<ITicketsRepository, TicketsRepository>();
+        services.AddScoped<IAuditoriumsRepository, AuditoriumsRepository>();
+        services.AddScoped<IMoviesRepository, MoviesRepository>();
+
         services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
         services.AddSingleton<IConnectionMultiplexer>(x =>
             ConnectionMultiplexer.Connect(Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey) ??
                                           throw new ApplicationException("Redis connection didn't set properly.")));
         services.AddSingleton<ICacheService, RedisCacheService>();
+
         services.AddScoped<IMoviesService, MoviesService>();
         services.AddSingleton<IActionResultProvider, ActionResultProvider>();
         services.AddSingleton(typeof(IActionResultMapper<>), typeof(ActionResultMapper<>));

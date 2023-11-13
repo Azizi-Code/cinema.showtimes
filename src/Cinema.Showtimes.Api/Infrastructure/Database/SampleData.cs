@@ -14,6 +14,7 @@ public class SampleData
         context.Auditoriums.Add(new AuditoriumEntity
         (
             1,
+            GenerateSeats(1, 28, 22),
             new List<ShowtimeEntity>
             {
                 new ShowtimeEntity
@@ -30,8 +31,7 @@ public class SampleData
                     new DateTime(2023, 1, 1),
                     1
                 )
-            },
-            GenerateSeats(1, 28, 22)
+            }
         ));
 
         context.Auditoriums.Add(new AuditoriumEntity(

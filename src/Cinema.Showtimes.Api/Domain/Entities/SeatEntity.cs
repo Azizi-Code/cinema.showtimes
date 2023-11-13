@@ -3,9 +3,9 @@
 public class SeatEntity
 {
     public short Row { get; }
-    public short SeatNumber { get;  }
+    public short SeatNumber { get; }
     public int AuditoriumId { get; }
-    public AuditoriumEntity Auditorium { get;  }
+    public AuditoriumEntity Auditorium { get; }
 
     private SeatEntity()
     {

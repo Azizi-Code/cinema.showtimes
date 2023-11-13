@@ -4,5 +4,5 @@ namespace Cinema.Showtimes.Api.Domain.Repositories;
 
 public interface IAuditoriumsRepository
 {
-    Task<AuditoriumEntity> GetAsync(int auditoriumId, CancellationToken cancel);
+    Task<AuditoriumEntity?> GetByIdAsync(int auditoriumId, CancellationToken cancellationToken = default);
 }

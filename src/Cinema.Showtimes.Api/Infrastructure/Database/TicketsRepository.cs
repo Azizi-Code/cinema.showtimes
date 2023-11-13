@@ -13,39 +13,35 @@ public class TicketsRepository : ITicketsRepository
         _context = context;
     }
 
-    public Task<TicketEntity> GetAsync(Guid id, CancellationToken cancel)
+    public Task<TicketEntity> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancel);
+        return _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancel)
+    public async Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancellationToken)
     {
         return await _context.Tickets
             .Include(x => x.Showtime)
             .Include(x => x.Seats)
             .Where(x => x.ShowtimeId == showtimeId)
-            .ToListAsync(cancel);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
-        CancellationToken cancel)
+        CancellationToken cancellationToken)
     {
-        var ticket = _context.Tickets.Add(new TicketEntity
-        {
-            Showtime = showtime,
-            Seats = new List<SeatEntity>(selectedSeats)
-        });
+        var ticket = _context.Tickets.Add(TicketEntity.Create(showtime, new List<SeatEntity>(selectedSeats)));
 
-        await _context.SaveChangesAsync(cancel);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return ticket.Entity;
     }
 
-    public async Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancel)
+    public async Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancellationToken)
     {
-        ticket.Paid = true;
+        ticket = ticket.ConfirmPaymentAsync();
         _context.Update(ticket);
-        await _context.SaveChangesAsync(cancel);
+        await _context.SaveChangesAsync(cancellationToken);
         return ticket;
     }
 }

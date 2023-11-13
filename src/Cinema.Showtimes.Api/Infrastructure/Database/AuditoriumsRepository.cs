@@ -13,10 +13,16 @@ public class AuditoriumsRepository : IAuditoriumsRepository
         _context = context;
     }
 
-    public async Task<AuditoriumEntity> GetAsync(int auditoriumId, CancellationToken cancel)
+    public async Task<AuditoriumEntity?> GetAsync(int auditoriumId, CancellationToken cancellationToken)
     {
         return await _context.Auditoriums
             .Include(x => x.Seats)
-            .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancel);
+            .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancellationToken);
+    }
+
+    public async Task<AuditoriumEntity?> GetByIdAsync(int auditoriumId, CancellationToken cancellationToken)
+    {
+        return await _context.Auditoriums.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancellationToken);
     }
 }

@@ -4,11 +4,11 @@ namespace Cinema.Showtimes.Api.Domain.Repositories;
 
 public interface ITicketsRepository
 {
-    Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancel);
+    Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancellationToken);
 
     Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
-        CancellationToken cancel);
+        CancellationToken cancellationToken);
 
-    Task<TicketEntity> GetAsync(Guid id, CancellationToken cancel);
-    Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancel);
+    Task<TicketEntity> GetAsync(Guid id, CancellationToken cancellationToken);
+    Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancellationToken);
 }
