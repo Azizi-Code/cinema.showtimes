@@ -4,6 +4,7 @@ using Cinema.Showtimes.Api.Application.Constants;
 using Cinema.Showtimes.Api.Application.Middlewares;
 using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Domain.Repositories;
+using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using Cinema.Showtimes.Api.Infrastructure.Caching;
 using Cinema.Showtimes.Api.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ public class Startup
                                           throw new ApplicationException("Redis connection didn't set properly.")));
         services.AddSingleton<ICacheService, RedisCacheService>();
         services.AddScoped<IMoviesService, MoviesService>();
+        services.AddSingleton<IActionResultProvider, ActionResultProvider>();
+        services.AddSingleton(typeof(IActionResultMapper<>), typeof(ActionResultMapper<>));
 
         services.AddDbContext<CinemaContext>(options =>
         {
