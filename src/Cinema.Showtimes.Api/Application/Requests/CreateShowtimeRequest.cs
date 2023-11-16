@@ -1,4 +1,4 @@
-namespace Cinema.Showtimes.Api.Controllers;
+namespace Cinema.Showtimes.Api.Application.Requests;
 
 public class CreateShowtimeRequest
 {
