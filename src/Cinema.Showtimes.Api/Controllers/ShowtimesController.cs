@@ -1,4 +1,5 @@
 using Cinema.Showtimes.Api.Application.Commands;
+using Cinema.Showtimes.Api.Application.Requests;
 using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using MediatR;
@@ -27,6 +28,7 @@ public class ShowtimesController : Controller
     {
         try
         {
+            //to do map to our response model
             var result = await _moviesService.GetByIdAsync(id, cancellationToken);
             return Ok(result);
         }

@@ -1,5 +1,5 @@
-using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Domain.Entities;
+using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
 using MediatR;
@@ -25,12 +25,12 @@ public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesComm
 
     public async Task Handle(CreateShowtimesCommand request, CancellationToken cancellationToken)
     {
-        // var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
-        //     x.AuditoriumId == request.AuditoriumId && x.SessionDate == request.SessionDate, cancellationToken);
-        // if (existedShowtime != null)
-        // {
-        //     throw new Exception("this show already existed");
-        // }
+        var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
+            x.AuditoriumId == request.AuditoriumId, cancellationToken);
+        if (existedShowtime != null)
+        {
+            throw new Exception("this show already existed");
+        }
 
         var auditorium = await _auditoriumsRepository.GetByIdAsync(request.AuditoriumId, cancellationToken);
         if (auditorium == null)

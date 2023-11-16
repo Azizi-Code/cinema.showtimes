@@ -25,6 +25,7 @@ public class ShowtimesRepository : IShowtimesRepository
     {
         return await _context.ShowTimes
             .Include(x => x.Tickets)
+            .Include(x => x.Movie)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
@@ -49,6 +50,7 @@ public class ShowtimesRepository : IShowtimesRepository
     {
         var showtime = await _context.ShowTimes.AddAsync(showtimeEntity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
         return showtime.Entity;
     }
 }

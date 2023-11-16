@@ -1,12 +1,15 @@
 using Cinema.Showtimes.Api.Application.Caching;
 using Cinema.Showtimes.Api.Application.Clients;
+using Cinema.Showtimes.Api.Application.Commands;
 using Cinema.Showtimes.Api.Application.Constants;
+using Cinema.Showtimes.Api.Application.Dtos;
 using Cinema.Showtimes.Api.Application.Middlewares;
 using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using Cinema.Showtimes.Api.Infrastructure.Caching;
 using Cinema.Showtimes.Api.Infrastructure.Database;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
@@ -41,6 +44,9 @@ public class Startup
         services.AddScoped<IMoviesService, MoviesService>();
         services.AddSingleton<IActionResultProvider, ActionResultProvider>();
         services.AddSingleton(typeof(IActionResultMapper<>), typeof(ActionResultMapper<>));
+        services
+            .AddScoped<IRequestHandler<CreateReservationCommand, ReservedTicketResponse>,
+                CreateReservationCommandHandler>();
 
         services.AddDbContext<CinemaContext>(options =>
         {

@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Showtimes.Api.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Showtimes.Api.IntegrationTests", "tests\Cinema.Showtimes.Api.IntegrationTests\Cinema.Showtimes.Api.IntegrationTests.csproj", "{5AE5EEE4-6C40-43E2-8DE9-E827B49FEBAD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "solutionItems", "{A30D7CB1-29D6-4FD7-8D4F-9455DB9A0214}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A30D7CB1-29D6-4FD7-8D4F-9455DB9A0214}"
 	ProjectSection(SolutionItems) = preProject
 		cUrls.txt = solutionItems\cUrls.txt
 		docker-compose.yaml = solutionItems\docker-compose.yaml

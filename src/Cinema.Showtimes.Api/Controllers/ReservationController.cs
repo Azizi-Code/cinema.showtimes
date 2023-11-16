@@ -1,5 +1,8 @@
 using Cinema.Showtimes.Api.Application.Commands;
-using Cinema.Showtimes.Api.Domain.Entities;
+using Cinema.Showtimes.Api.Application.Dtos;
+using Cinema.Showtimes.Api.Application.Mappers;
+using Cinema.Showtimes.Api.Application.Requests;
+using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,27 +13,29 @@ namespace Cinema.Showtimes.Api.Controllers;
 public class ReservationController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly IActionResultMapper<ReservationController> _actionResultMapper;
 
-    public ReservationController(IMediator mediator)
+    public ReservationController(IMediator mediator, IActionResultMapper<ReservationController> actionResultMapper)
     {
         _mediator = mediator;
+        _actionResultMapper = actionResultMapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Reserve([FromBody] CreateReservationRequest request)
+    public async Task<IActionResult> Reserve([FromBody] CreateReservationRequest request,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var command = new CreateReservationCommand(request.ShowtimeId,
-                request.SelectedSeats.Select(x => new SeatEntity(x.AuditoriumId, x.Row, x.SeatNumber)).ToList());
-            await _mediator.Send(command);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+            var createReservationCommand =
+                new CreateReservationCommand(request.ShowtimeId, request.SelectedSeats.MapToEntity());
+            var result = await _mediator.Send<ReservedTicketResponse>(createReservationCommand, cancellationToken);
 
-        return Ok();
+            return Ok(result);
+        }
+        catch (Exception exception)
+        {
+            return _actionResultMapper.Map(exception);
+        }
     }
 }

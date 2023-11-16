@@ -1,10 +1,13 @@
+using Cinema.Showtimes.Api.Application.Dtos;
+using Cinema.Showtimes.Api.Application.Mappers;
 using Cinema.Showtimes.Api.Domain.Entities;
+using Cinema.Showtimes.Api.Domain.Exceptions;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using MediatR;
 
 namespace Cinema.Showtimes.Api.Application.Commands;
 
-public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand>
+public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand, ReservedTicketResponse>
 {
     private readonly IShowtimesRepository _showtimesRepository;
     private readonly ITicketsRepository _ticketsRepository;
@@ -18,20 +21,20 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         _auditoriumsRepository = auditoriumsRepository;
     }
 
-    public async Task Handle(CreateReservationCommand request, CancellationToken cancellationToken)
+    public async Task<ReservedTicketResponse> Handle(CreateReservationCommand request,
+        CancellationToken cancellationToken)
     {
         var showtime = await _showtimesRepository.GetWithTicketsByIdAsync(request.ShowtimeId, cancellationToken);
         if (showtime == null)
-            throw new Exception("showtime is not valid");
+            throw new ShowtimeNotFound(request.ShowtimeId);
 
-        var auditorium =
-            await _auditoriumsRepository.GetWithSeatsByIdAsync(request.SelectedSeats.First().AuditoriumId,
-                cancellationToken);
+        var auditoriumId = request.SelectedSeats.First().AuditoriumId;
+        var auditorium = await _auditoriumsRepository.GetWithSeatsByIdAsync(auditoriumId, cancellationToken);
         if (auditorium == null)
-            throw new Exception("auditorium is not valid");
+            throw new AuditoriumNotFoundException(request.SelectedSeats.First().AuditoriumId);
 
-        if (showtime.AuditoriumId != auditorium.Id)
-            throw new Exception("auditorium is not valid");
+        if (showtime.AuditoriumId != auditoriumId)
+            throw new InvalidAuditoriumException("The selected auditorium does not match the show's auditorium.");
 
         var selectedSeats = request.SelectedSeats
             .Select(seat => auditorium.Seats.FirstOrDefault(x =>
@@ -39,10 +42,12 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
             .Where(res => res != null)?.ToList();
 
         if (selectedSeats == null || selectedSeats.Count != request.SelectedSeats.Count)
-            throw new Exception("seats are not valid");
+            throw new InvalidSeatsException("The selected seats are not valid");
 
         TicketEntity.ReserveSeats(showtime, selectedSeats);
 
-        var ticket = await _ticketsRepository.CreateAsync(showtime, selectedSeats, cancellationToken);
+        var reservedTicket = await _ticketsRepository.CreateAsync(showtime, selectedSeats, cancellationToken);
+
+        return reservedTicket.MapToResponse();
     }
 }
