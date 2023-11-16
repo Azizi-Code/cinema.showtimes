@@ -28,12 +28,18 @@ public class TicketsRepository : ITicketsRepository
     }
 
     public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
-        CancellationToken cancellationToken)
+        CancellationToken cancel)
     {
-        var ticket = _context.Tickets.Add(TicketEntity.Create(showtime, new List<SeatEntity>(selectedSeats)));
+        var ticket = _context.Tickets.Add(new TicketEntity(showtime, new List<SeatEntity>(selectedSeats)));
+        await _context.SaveChangesAsync(cancel);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        return ticket.Entity;
+    }
 
+    public async Task<TicketEntity> CreateAsync(TicketEntity ticketEntity, CancellationToken cancel)
+    {
+        var ticket = _context.Tickets.Add(ticketEntity);
+        await _context.SaveChangesAsync(cancel);
         return ticket.Entity;
     }
 
