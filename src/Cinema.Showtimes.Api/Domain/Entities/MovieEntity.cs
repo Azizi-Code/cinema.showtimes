@@ -2,12 +2,12 @@
 
 public class MovieEntity
 {
-    public int Id { get; }
-    public string Title { get; }
-    public string ImdbId { get; }
-    public string Stars { get; }
-    public DateTime ReleaseDate { get; }
-    public IList<ShowtimeEntity> Showtimes { get; }
+    public int Id { get; private set; }
+    public string Title { get; private set; }
+    public string ImdbId { get; private set; }
+    public string Stars { get; private set; }
+    public DateTime ReleaseDate { get; private set; }
+    public IList<ShowtimeEntity> Showtimes { get; private set; }
 
     private MovieEntity()
     {

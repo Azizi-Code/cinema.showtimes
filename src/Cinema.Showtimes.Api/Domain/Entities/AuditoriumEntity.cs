@@ -2,9 +2,9 @@
 
 public class AuditoriumEntity
 {
-    public int Id { get; }
-    public IList<ShowtimeEntity>? Showtimes { get; }
-    public ICollection<SeatEntity> Seats { get; }
+    public int Id { get; private set; }
+    public IList<ShowtimeEntity>? Showtimes { get; private set; }
+    public ICollection<SeatEntity> Seats { get; private set; }
 
     public AuditoriumEntity(ICollection<SeatEntity> seats, IList<ShowtimeEntity>? showtimes = default)
     {

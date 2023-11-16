@@ -2,10 +2,10 @@
 
 public class SeatEntity
 {
-    public short Row { get; }
-    public short SeatNumber { get; }
-    public int AuditoriumId { get; }
-    public AuditoriumEntity Auditorium { get; }
+    public short Row { get; private set; }
+    public short SeatNumber { get; private set; }
+    public int AuditoriumId { get; private set; }
+    public AuditoriumEntity Auditorium { get; private set; }
 
     private SeatEntity()
     {
