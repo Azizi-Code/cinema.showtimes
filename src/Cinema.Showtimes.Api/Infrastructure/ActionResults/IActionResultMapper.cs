@@ -1,6 +1,5 @@
 using System.Runtime.ExceptionServices;
-using Cinema.Showtimes.Api.Application.Exceptions;
-using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
+using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Showtimes.Api.Infrastructure.ActionResults;
@@ -38,6 +37,9 @@ public class ActionResultMapper<TController> : IActionResultMapper<TController>
             case NotFoundException:
                 _logger.LogError(exception, exception.Message);
                 return _actionResultProvider.GetNotFoundErrorResponse(exception.Message);
+            case ApplicationException:
+                _logger.LogError(exception, exception.Message);
+                return _actionResultProvider.GetApplicationErrorResponse(exception.Message);
             default:
                 _logger.LogError(exception, exception.Message);
                 ExceptionDispatchInfo.Capture(exception).Throw();

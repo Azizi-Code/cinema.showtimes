@@ -1,4 +1,4 @@
-namespace Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
+namespace Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 
 public class BadRequestException : Exception
 {

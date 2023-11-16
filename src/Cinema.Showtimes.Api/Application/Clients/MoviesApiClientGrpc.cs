@@ -28,7 +28,8 @@ public class MoviesApiClientGrpc : IMoviesApiClient
         }
         catch (Exception ex)
         {
-            throw new MovieApiUnAvailableException($"process for fetching all movie data failed. Error message => {ex.Message}");
+            throw new MovieApiUnAvailableException(
+                $"process for fetching all movie data failed. Error message => {ex.Message}");
         }
     }
 
@@ -47,7 +48,8 @@ public class MoviesApiClientGrpc : IMoviesApiClient
         }
         catch (RpcException ex)
         {
-            throw new MovieApiUnAvailableException($"process for fetching movie data failed. Error message => {ex.Message}");
+            throw new MovieApiUnAvailableException(
+                $"process for fetching movie data failed. Error message => {ex.Message}");
         }
     }
 

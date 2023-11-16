@@ -7,8 +7,9 @@ public interface IActionResultProvider
 {
     IActionResult GetBadRequestErrorResponse(string errorMessage, string target);
     IActionResult GetServiceUnavailableErrorResponse(string errorMessage);
-    public IActionResult GetUnprocessableEntityErrorResponse(string errorMessage);
+    IActionResult GetUnprocessableEntityErrorResponse(string errorMessage);
     IActionResult GetNotFoundErrorResponse(string errorMessage);
+    IActionResult GetApplicationErrorResponse(string errorMessage);
 }
 
 public class ActionResultProvider : IActionResultProvider
@@ -46,4 +47,12 @@ public class ActionResultProvider : IActionResultProvider
                     errorMessage)
             ))
             { StatusCode = (int)HttpStatusCode.NotFound };
+
+    public IActionResult GetApplicationErrorResponse(string errorMessage) =>
+        new ObjectResult(new ErrorResponse(
+                new Error(
+                    nameof(HttpStatusCode.InternalServerError),
+                    errorMessage)
+            ))
+            { StatusCode = (int)HttpStatusCode.InternalServerError };
 }
