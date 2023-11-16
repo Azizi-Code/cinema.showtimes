@@ -28,10 +28,8 @@ public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesComm
     {
         var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
             x.AuditoriumId == request.AuditoriumId && x.SessionDate == request.SessionDate, cancellationToken);
-        if (existedShowtime != null)
-        {
+        if (existedShowtime != null && existedShowtime.Any())
             throw new ShowtimeAlreadyExistException("This show already existed.");
-        }
 
         var auditorium = await _auditoriumsRepository.GetByIdAsync(request.AuditoriumId, cancellationToken);
         if (auditorium == null)
