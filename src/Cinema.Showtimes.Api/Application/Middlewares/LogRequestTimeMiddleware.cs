@@ -13,15 +13,15 @@ public class LogRequestTimeMiddleware
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext httpContent)
+    public async Task InvokeAsync(HttpContext httpContext)
     {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        await _next(httpContent);
+        await _next(httpContext);
 
         stopwatch.Stop();
         _logger.LogInformation(
-            $"Request |{httpContent.Request.Path + httpContent.Request.QueryString.Value}| executed in => {stopwatch.ElapsedMilliseconds} ms");
+            $"Request |{httpContext.Request.Path + httpContext.Request.QueryString.Value}| executed in => {stopwatch.ElapsedMilliseconds} ms");
     }
 }
