@@ -13,7 +13,7 @@ public class AuditoriumsRepository : IAuditoriumsRepository
         _context = context;
     }
 
-    public async Task<AuditoriumEntity?> GetAsync(int auditoriumId, CancellationToken cancellationToken)
+    public async Task<AuditoriumEntity?> GetWithSeatsByIdAsync(int auditoriumId, CancellationToken cancellationToken)
     {
         return await _context.Auditoriums
             .Include(x => x.Seats)
@@ -22,7 +22,7 @@ public class AuditoriumsRepository : IAuditoriumsRepository
 
     public async Task<AuditoriumEntity?> GetByIdAsync(int auditoriumId, CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums.AsNoTracking()
+        return await _context.Auditoriums
             .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancellationToken);
     }
 }
