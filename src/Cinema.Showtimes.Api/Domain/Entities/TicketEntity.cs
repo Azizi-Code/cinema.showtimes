@@ -83,8 +83,10 @@ public class TicketEntity
         if (result) throw new Exception("selected seat is soldOut.");
     }
 
-    public TicketEntity ConfirmPaymentAsync()
+    public TicketEntity ConfirmPayment()
     {
+        if (Paid) throw new Exception("Tish reservation already payed.");
+
         Paid = true;
         return this;
     }

@@ -44,6 +44,5 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         TicketEntity.ReserveSeats(showtime, selectedSeats);
 
         var ticket = await _ticketsRepository.CreateAsync(showtime, selectedSeats, cancellationToken);
-        await _ticketsRepository.ConfirmPaymentAsync(ticket, cancellationToken);
     }
 }

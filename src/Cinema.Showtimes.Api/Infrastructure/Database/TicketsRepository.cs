@@ -36,16 +36,8 @@ public class TicketsRepository : ITicketsRepository
         return ticket.Entity;
     }
 
-    public async Task<TicketEntity> CreateAsync(TicketEntity ticketEntity, CancellationToken cancel)
-    {
-        var ticket = _context.Tickets.Add(ticketEntity);
-        await _context.SaveChangesAsync(cancel);
-        return ticket.Entity;
-    }
-
     public async Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancellationToken)
     {
-        ticket = ticket.ConfirmPaymentAsync();
         _context.Update(ticket);
         await _context.SaveChangesAsync(cancellationToken);
         return ticket;

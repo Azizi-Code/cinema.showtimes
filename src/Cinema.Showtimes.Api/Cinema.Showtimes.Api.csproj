@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Application\Queries\" />
-    <Folder Include="Application\Responses\Model\" />
     <Folder Include="Domain\Exceptions\" />
   </ItemGroup>
 
