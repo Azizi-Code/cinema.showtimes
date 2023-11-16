@@ -1,3 +1,4 @@
+using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Repositories;

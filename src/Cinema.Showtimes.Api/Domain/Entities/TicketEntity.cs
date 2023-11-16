@@ -1,4 +1,6 @@
-﻿namespace Cinema.Showtimes.Api.Domain.Entities;
+﻿using Cinema.Showtimes.Api.Domain.Exceptions;
+
+namespace Cinema.Showtimes.Api.Domain.Entities;
 
 public class TicketEntity
 {
@@ -32,7 +34,7 @@ public class TicketEntity
     public static void ReserveSeats(ShowtimeEntity showtime, ICollection<SeatEntity> selectedSeats)
     {
         var reservationTimeout =
-            DateTime.UtcNow.AddSeconds(-10); //it can be implement to set in configuration but for now I skipped it.
+            DateTime.UtcNow.AddMinutes(-10); //it can be implement to set in configuration but for now I skipped it.
 
         CheckSelectedSeatsAreContiguous(selectedSeats);
 
@@ -62,17 +64,17 @@ public class TicketEntity
         {
             if (sortedSeats[i].Row == sortedSeats[i + 1].Row &&
                 sortedSeats[i].SeatNumber != sortedSeats[i + 1].SeatNumber - 1)
-                throw new Exception("selected seats are not contiguous");
+                throw new NotContiguousSeatsException();
         }
     }
 
     private static void CheckSelectedSeatsAreNotAlreadyReserved(IEnumerable<SeatEntity> selectedSeats,
-        IEnumerable<SeatEntity> reservedSeatsLessThanReservationTimeout)
+        IEnumerable<SeatEntity> reservedSeatsLessThanTimeout)
     {
-        var reservedSeatsHash = reservedSeatsLessThanReservationTimeout.Select(seat => (seat.Row, seat.SeatNumber))
-            .ToHashSet();
+        var reservedSeatsHash = reservedSeatsLessThanTimeout.Select(seat => (seat.Row, seat.SeatNumber)).ToHashSet();
         var result = selectedSeats.Any(seat => reservedSeatsHash.Contains((seat.Row, seat.SeatNumber)));
-        if (result) throw new Exception("selected seat is locked for reservation.");
+
+        if (result) throw new SeatsAlreadyReservedException();
     }
 
     private static void CheckSelectedSeatsAreNotSoldOut(IEnumerable<SeatEntity> selectedSeats,
@@ -80,12 +82,13 @@ public class TicketEntity
     {
         var unavailableSeatsHashSet = unavailableSeats.Select(x => (x.Row, x.SeatNumber)).ToHashSet();
         var result = selectedSeats.Any(seat => unavailableSeatsHashSet.Contains((seat.Row, seat.SeatNumber)));
-        if (result) throw new Exception("selected seat is soldOut.");
+
+        if (result) throw new SeatsSoldOutException();
     }
 
     public TicketEntity ConfirmPayment()
     {
-        if (Paid) throw new Exception("Tish reservation already payed.");
+        if (Paid) throw new ReservationAlreadyPaidException();
 
         Paid = true;
         return this;

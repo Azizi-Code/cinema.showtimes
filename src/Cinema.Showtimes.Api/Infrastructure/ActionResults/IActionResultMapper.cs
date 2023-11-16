@@ -1,4 +1,5 @@
 using System.Runtime.ExceptionServices;
+using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 using Microsoft.AspNetCore.Mvc;
 

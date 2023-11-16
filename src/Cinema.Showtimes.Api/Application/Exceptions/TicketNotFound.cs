@@ -3,9 +3,9 @@ using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
 
 namespace Cinema.Showtimes.Api.Application.Exceptions;
 
-public class MovieNotFoundException : NotFoundException
+public class TicketNotFoundException : NotFoundException
 {
-    public MovieNotFoundException(string id) : base($"Movie with id '{id}' does not exist.")
+    public TicketNotFoundException(string id) : base($"Ticket not found: Reservation ID '{id}'.")
     {
     }
 }

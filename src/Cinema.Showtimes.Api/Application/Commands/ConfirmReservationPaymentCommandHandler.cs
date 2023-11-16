@@ -1,3 +1,4 @@
+using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using MediatR;
 
@@ -14,10 +15,9 @@ public class ConfirmReservationPaymentCommandHandler : IRequestHandler<ConfirmRe
     {
         var ticket = await _ticketsRepository.GetAsync(request.ReservationId, cancellationToken);
         if (ticket == null)
-            throw new Exception("The Ticket doesnt exist");
+            throw new TicketNotFoundException(request.ReservationId.ToString());
 
         var confirmedTicket = ticket.ConfirmPayment();
-
         await _ticketsRepository.ConfirmPaymentAsync(confirmedTicket, cancellationToken);
     }
 }

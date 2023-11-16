@@ -1,4 +1,5 @@
 using Cinema.Showtimes.Api.Application.Dtos;
+using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Application.Mappers;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Exceptions;
@@ -28,13 +29,13 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         if (showtime == null)
             throw new ShowtimeNotFound(request.ShowtimeId);
 
-        var auditoriumId = request.SelectedSeats.First().AuditoriumId;
+        var auditoriumId = request.SelectedSeats.FirstOrDefault().AuditoriumId;
         var auditorium = await _auditoriumsRepository.GetWithSeatsByIdAsync(auditoriumId, cancellationToken);
         if (auditorium == null)
-            throw new AuditoriumNotFoundException(request.SelectedSeats.First().AuditoriumId);
+            throw new AuditoriumNotFoundException(request.SelectedSeats.FirstOrDefault().AuditoriumId);
 
         if (showtime.AuditoriumId != auditoriumId)
-            throw new InvalidAuditoriumException("The selected auditorium does not match the show's auditorium.");
+            throw new InvalidAuditoriumException();
 
         var selectedSeats = request.SelectedSeats
             .Select(seat => auditorium.Seats.FirstOrDefault(x =>
@@ -42,7 +43,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
             .Where(res => res != null)?.ToList();
 
         if (selectedSeats == null || selectedSeats.Count != request.SelectedSeats.Count)
-            throw new InvalidSeatsException("The selected seats are not valid");
+            throw new InvalidSeatsException();
 
         TicketEntity.ReserveSeats(showtime, selectedSeats);
 

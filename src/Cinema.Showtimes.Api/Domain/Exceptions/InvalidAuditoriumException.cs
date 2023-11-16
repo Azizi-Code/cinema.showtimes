@@ -4,7 +4,7 @@ namespace Cinema.Showtimes.Api.Domain.Exceptions;
 
 public class InvalidAuditoriumException : UnprocessableEntityException
 {
-    public InvalidAuditoriumException(string message) : base(message)
+    public InvalidAuditoriumException() : base("The selected auditorium does not match the show's auditorium.")
     {
     }
 }

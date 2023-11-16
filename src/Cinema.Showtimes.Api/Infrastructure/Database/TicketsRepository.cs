@@ -13,7 +13,7 @@ public class TicketsRepository : ITicketsRepository
         _context = context;
     }
 
-    public Task<TicketEntity> GetAsync(Guid id, CancellationToken cancellationToken)
+    public Task<TicketEntity?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
         return _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
