@@ -7,6 +7,7 @@ public interface IActionResultProvider
 {
     IActionResult GetBadRequestErrorResponse(string errorMessage, string target);
     IActionResult GetServiceUnavailableErrorResponse(string errorMessage);
+    public IActionResult GetUnprocessableEntityErrorResponse(string errorMessage);
     IActionResult GetNotFoundErrorResponse(string errorMessage);
 }
 
@@ -19,6 +20,16 @@ public class ActionResultProvider : IActionResultProvider
                 errorMessage,
                 new[] { new ErrorDetail(target) })
         ));
+
+    public IActionResult GetUnprocessableEntityErrorResponse(string errorMessage) =>
+        new ObjectResult(
+                new ErrorResponse(
+                    new Error(
+                        nameof(HttpStatusCode.UnprocessableEntity),
+                        errorMessage)
+                )
+            )
+            { StatusCode = (int)HttpStatusCode.UnprocessableEntity };
 
     public IActionResult GetServiceUnavailableErrorResponse(string errorMessage) =>
         new ObjectResult(new ErrorResponse(

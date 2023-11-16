@@ -1,4 +1,4 @@
-namespace Cinema.Showtimes.Api.Application.Exceptions;
+namespace Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
 
 public class NotFoundException : Exception
 {

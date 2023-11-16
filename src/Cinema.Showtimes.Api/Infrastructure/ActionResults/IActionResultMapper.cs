@@ -1,5 +1,6 @@
 using System.Runtime.ExceptionServices;
 using Cinema.Showtimes.Api.Application.Exceptions;
+using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Showtimes.Api.Infrastructure.ActionResults;
@@ -24,9 +25,12 @@ public class ActionResultMapper<TController> : IActionResultMapper<TController>
     {
         switch (exception)
         {
-            case MovieApiException:
+            case UnAvailableServiceException:
                 _logger.LogError(exception, exception.Message);
                 return _actionResultProvider.GetServiceUnavailableErrorResponse(exception.Message);
+            case UnprocessableEntityException:
+                _logger.LogError(exception, exception.Message);
+                return _actionResultProvider.GetUnprocessableEntityErrorResponse(exception.Message);
             case BadRequestException badRequestException:
                 _logger.LogError(exception, exception.Message);
                 return _actionResultProvider.GetBadRequestErrorResponse(badRequestException.Message,

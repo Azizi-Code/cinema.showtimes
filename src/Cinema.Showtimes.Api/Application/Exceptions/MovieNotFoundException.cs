@@ -1,3 +1,5 @@
+using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
+
 namespace Cinema.Showtimes.Api.Application.Exceptions;
 
 public class MovieNotFoundException : NotFoundException
