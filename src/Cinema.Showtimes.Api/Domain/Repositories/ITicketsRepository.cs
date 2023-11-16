@@ -9,6 +9,6 @@ public interface ITicketsRepository
     Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
         CancellationToken cancellationToken);
 
-    Task<TicketEntity> GetAsync(Guid id, CancellationToken cancellationToken);
+    Task<TicketEntity> GetAsync(Guid id, CancellationToken cancel);
     Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancellationToken);
 }
