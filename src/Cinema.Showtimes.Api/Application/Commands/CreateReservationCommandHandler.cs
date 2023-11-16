@@ -25,7 +25,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     public async Task<ReservedTicketResponse> Handle(CreateReservationCommand request,
         CancellationToken cancellationToken)
     {
-        var showtime = await _showtimesRepository.GetWithTicketsByIdAsync(request.ShowtimeId, cancellationToken);
+        var showtime = await _showtimesRepository.GetWithTicketsAndMovieByIdAsync(request.ShowtimeId, cancellationToken);
         if (showtime == null)
             throw new ShowtimeNotFound(request.ShowtimeId);
 

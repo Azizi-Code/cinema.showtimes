@@ -12,5 +12,5 @@ public interface IShowtimesRepository
 
     Task<ShowtimeEntity?> GetWithMoviesByIdAsync(int id, CancellationToken cancellationToken);
 
-    Task<ShowtimeEntity?> GetWithTicketsByIdAsync(int id, CancellationToken cancellationToken);
+    Task<ShowtimeEntity?> GetWithTicketsAndMovieByIdAsync(int id, CancellationToken cancellationToken);
 }

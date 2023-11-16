@@ -15,6 +15,6 @@ public class MoviesRepository : IMoviesRepository
 
     public async Task<MovieEntity?> GetByIdAsync(int movieId, CancellationToken cancellationToken)
     {
-        return await _context.Movies.AsNoTracking().FirstOrDefaultAsync(x => x.Id == movieId, cancellationToken);
+        return await _context.Movies.FirstOrDefaultAsync(x => x.Id == movieId, cancellationToken);
     }
 }

@@ -21,7 +21,7 @@ public class ShowtimesRepository : IShowtimesRepository
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<ShowtimeEntity?> GetWithTicketsByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<ShowtimeEntity?> GetWithTicketsAndMovieByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.ShowTimes
             .Include(x => x.Tickets)

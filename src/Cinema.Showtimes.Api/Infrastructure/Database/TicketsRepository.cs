@@ -13,10 +13,8 @@ public class TicketsRepository : ITicketsRepository
         _context = context;
     }
 
-    public Task<TicketEntity?> GetAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-    }
+    public Task<TicketEntity?> GetAsync(Guid id, CancellationToken cancellationToken) =>
+        _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancellationToken)
     {
@@ -40,6 +38,7 @@ public class TicketsRepository : ITicketsRepository
     {
         _context.Update(ticket);
         await _context.SaveChangesAsync(cancellationToken);
+
         return ticket;
     }
 }
