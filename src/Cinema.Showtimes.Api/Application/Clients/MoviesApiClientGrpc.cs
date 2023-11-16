@@ -59,7 +59,8 @@ public class MoviesApiClientGrpc : IMoviesApiClient
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
 
-        var channel = GrpcChannel.ForAddress(ApplicationConstant.MovieApiAddress, new GrpcChannelOptions
+
+        var channel = GrpcChannel.ForAddress(GetApiAddress(), new GrpcChannelOptions
         {
             HttpHandler = httpHandler
         });
@@ -74,5 +75,12 @@ public class MoviesApiClientGrpc : IMoviesApiClient
         return apiKeyHeaderValue != null
             ? new Metadata { { ApplicationConstant.ApiKeyHeaderName, apiKeyHeaderValue } }
             : throw new Exception("The value for ApiKey header can't be null.");
+    }
+
+    private string GetApiAddress()
+    {
+        var movieApiAddress = _configuration.GetValue<string>(ApplicationConstant.MovieApiAddressKey);
+
+        return movieApiAddress ?? throw new Exception("The value for MovieApiAddressKey header can't be null.");
     }
 }
