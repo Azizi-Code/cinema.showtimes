@@ -5,7 +5,6 @@ namespace Cinema.Showtimes.Api.Infrastructure.ActionResults;
 
 public interface IActionResultProvider
 {
-    IActionResult GetBadRequestErrorResponse(string errorMessage, string target);
     IActionResult GetServiceUnavailableErrorResponse(string errorMessage);
     IActionResult GetUnprocessableEntityErrorResponse(string errorMessage);
     IActionResult GetNotFoundErrorResponse(string errorMessage);
@@ -14,14 +13,6 @@ public interface IActionResultProvider
 
 public class ActionResultProvider : IActionResultProvider
 {
-    public IActionResult GetBadRequestErrorResponse(string errorMessage, string target) =>
-        new BadRequestObjectResult(new ErrorResponse(
-            new Error(
-                nameof(HttpStatusCode.BadRequest),
-                errorMessage,
-                new[] { new ErrorDetail(target) })
-        ));
-
     public IActionResult GetUnprocessableEntityErrorResponse(string errorMessage) =>
         new ObjectResult(
                 new ErrorResponse(

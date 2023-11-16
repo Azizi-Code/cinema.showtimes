@@ -1,4 +1,4 @@
-using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
+using Cinema.Showtimes.Api.Common.BaseExceptions;
 
 namespace Cinema.Showtimes.Api.Application.Exceptions;
 

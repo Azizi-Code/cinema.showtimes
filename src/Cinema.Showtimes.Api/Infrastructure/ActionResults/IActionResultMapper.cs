@@ -1,6 +1,5 @@
 using System.Runtime.ExceptionServices;
-using Cinema.Showtimes.Api.Application.Exceptions.BaseExceptions;
-using Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
+using Cinema.Showtimes.Api.Common.BaseExceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Showtimes.Api.Infrastructure.ActionResults;
@@ -31,10 +30,6 @@ public class ActionResultMapper<TController> : IActionResultMapper<TController>
             case UnprocessableEntityException:
                 _logger.LogError(exception, exception.Message);
                 return _actionResultProvider.GetUnprocessableEntityErrorResponse(exception.Message);
-            case BadRequestException badRequestException:
-                _logger.LogError(exception, exception.Message);
-                return _actionResultProvider.GetBadRequestErrorResponse(badRequestException.Message,
-                    badRequestException.Target);
             case NotFoundException:
                 _logger.LogError(exception, exception.Message);
                 return _actionResultProvider.GetNotFoundErrorResponse(exception.Message);

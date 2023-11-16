@@ -37,8 +37,15 @@ public class Startup
 
         services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
         services.AddSingleton<IConnectionMultiplexer>(x =>
-            ConnectionMultiplexer.Connect(Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey) ??
-                                          throw new ApplicationException("Redis connection didn't set properly.")));
+            ConnectionMultiplexer.Connect(new ConfigurationOptions
+            {
+                EndPoints =
+                {
+                    Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey) ??
+                    throw new ApplicationException("Redis connection didn't set properly.")
+                },
+                AbortOnConnectFail = false
+            }));
         services.AddSingleton<ICacheService, RedisCacheService>();
 
         services.AddScoped<IMoviesService, MoviesService>();

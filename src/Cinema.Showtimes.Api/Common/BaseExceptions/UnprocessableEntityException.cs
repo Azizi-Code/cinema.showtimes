@@ -1,4 +1,4 @@
-namespace Cinema.Showtimes.Api.Domain.Exceptions.BaseExceptions;
+namespace Cinema.Showtimes.Api.Common.BaseExceptions;
 
 public class UnprocessableEntityException : Exception
 {

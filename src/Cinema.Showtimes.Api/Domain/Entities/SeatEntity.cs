@@ -7,14 +7,14 @@ public class SeatEntity
     public int AuditoriumId { get; private set; }
     public AuditoriumEntity Auditorium { get; private set; }
 
-    private SeatEntity()
-    {
-    }
-
     public SeatEntity(int auditoriumId, short row, short seatNumber)
     {
         Row = row;
         SeatNumber = seatNumber;
         AuditoriumId = auditoriumId;
+    }
+
+    private SeatEntity()
+    {
     }
 }

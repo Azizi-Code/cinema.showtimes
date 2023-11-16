@@ -37,9 +37,16 @@ public class MoviesService : IMoviesService
         }
         catch (MovieApiUnAvailableException)
         {
-            var movie = await _cacheService.GetAsync<showResponse>(id);
+            try
+            {
+                var movie = await _cacheService.GetAsync<showResponse>(id);
 
-            return movie ?? throw new MovieNotFoundException(id);
+                return movie ?? throw new MovieNotFoundException(id);
+            }
+            catch
+            {
+                throw new MovieApiUnAvailableException(id);
+            }
         }
     }
 }

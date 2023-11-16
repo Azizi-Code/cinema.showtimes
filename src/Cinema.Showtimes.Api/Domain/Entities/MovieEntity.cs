@@ -9,18 +9,17 @@ public class MovieEntity
     public DateTime ReleaseDate { get; private set; }
     public IList<ShowtimeEntity> Showtimes { get; private set; }
 
-    private MovieEntity()
-    {
-    }
 
-    public MovieEntity(string title, string imdbId, string stars, DateTime releaseDate)
+    public MovieEntity(int id, string title, string imdbId, string stars, DateTime releaseDate)
     {
+        Id = id;
         Title = title;
         ImdbId = imdbId;
         Stars = stars;
         ReleaseDate = releaseDate;
     }
 
-    public MovieEntity(int id, string title, string imdbId, string stars, DateTime releaseDate) : this(title, imdbId,
-        stars, releaseDate) => Id = id;
+    private MovieEntity()
+    {
+    }
 }
