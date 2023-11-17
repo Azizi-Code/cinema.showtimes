@@ -38,4 +38,20 @@ public class ReservationController : Controller
             return _actionResultMapper.Map(exception);
         }
     }
+
+    [HttpPut("Confirm")]
+    public async Task<IActionResult> ConfirmReservation(Guid reservationId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _mediator.Send(new ConfirmReservationPaymentCommand(reservationId), cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            return _actionResultMapper.Map(exception);
+        }
+
+        return Ok();
+    }
 }
