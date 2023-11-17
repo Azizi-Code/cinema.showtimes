@@ -1,7 +1,7 @@
 Please add the cURLs of your tests here:
 
-1-Get showtime by id:
-    curl -X GET "https://localhost:7629/api/v1/showtimes/id?id=showtimeId"
+1-Get showtime by id(from provided api) :
+    curl -X GET "https://localhost:7629/api/v1/showtimes/id?id=ID-test1"
 
 2-Create showtime:
 curl -X POST "https://localhost:7629/api/v1/showtimes" -H "Content-Type: application/json" -d '{

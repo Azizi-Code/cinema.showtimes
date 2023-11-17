@@ -1,4 +1,5 @@
 using Cinema.Showtimes.Api.Application.Exceptions;
+using Cinema.Showtimes.Api.Application.Requests;
 using Cinema.Showtimes.Api.Common.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Repositories;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace Cinema.Showtimes.Api.Application.Commands;
 
-public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesCommand>
+public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesCommand, CreateShowtimeResponse>
 {
     private readonly IShowtimesRepository _showtimesRepository;
     private readonly IAuditoriumsRepository _auditoriumsRepository;
@@ -24,7 +25,8 @@ public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesComm
     }
 
 
-    public async Task Handle(CreateShowtimesCommand request, CancellationToken cancellationToken)
+    public async Task<CreateShowtimeResponse> Handle(CreateShowtimesCommand request,
+        CancellationToken cancellationToken)
     {
         var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
             x.AuditoriumId == request.AuditoriumId && x.SessionDate == request.SessionDate, cancellationToken);
@@ -40,6 +42,8 @@ public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesComm
             throw new NotFoundException($"Movie with ID {request.MovieId} not found");
 
         var showtime = ShowtimeEntity.Create(movie, request.SessionDate, auditorium.Id);
-        await _showtimesRepository.CreateShowtimeAsync(showtime, cancellationToken);
+
+        var result = await _showtimesRepository.CreateShowtimeAsync(showtime, cancellationToken);
+        return new CreateShowtimeResponse(result.Id);
     }
 }

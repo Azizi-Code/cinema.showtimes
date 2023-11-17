@@ -3,6 +3,7 @@ using Cinema.Showtimes.Api.Application.Clients;
 using Cinema.Showtimes.Api.Application.Commands;
 using Cinema.Showtimes.Api.Application.Constants;
 using Cinema.Showtimes.Api.Application.Middlewares;
+using Cinema.Showtimes.Api.Application.Requests;
 using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Domain.Repositories;
@@ -26,16 +27,18 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
         services.AddScoped<IShowtimesRepository, ShowtimesRepository>();
         services.AddScoped<ITicketsRepository, TicketsRepository>();
         services.AddScoped<IAuditoriumsRepository, AuditoriumsRepository>();
         services.AddScoped<IMoviesRepository, MoviesRepository>();
 
         services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
+        services.AddScoped<IMoviesService, MoviesService>();
+        services.AddSingleton<ICacheService, RedisCacheService>();
+        services.AddSingleton<IActionResultProvider, ActionResultProvider>();
+        services.AddSingleton(typeof(IActionResultMapper<>), typeof(ActionResultMapper<>));
         services.AddSingleton<IConnectionMultiplexer>(x =>
             ConnectionMultiplexer.Connect(new ConfigurationOptions
             {
@@ -46,14 +49,15 @@ public class Startup
                 },
                 AbortOnConnectFail = false
             }));
-        services.AddSingleton<ICacheService, RedisCacheService>();
 
-        services.AddScoped<IMoviesService, MoviesService>();
-        services.AddSingleton<IActionResultProvider, ActionResultProvider>();
         services.AddSingleton(typeof(IActionResultMapper<>), typeof(ActionResultMapper<>));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
         services
             .AddScoped<IRequestHandler<CreateReservationCommand, ReservedTicketResponse>,
                 CreateReservationCommandHandler>();
+        services
+            .AddScoped<IRequestHandler<CreateShowtimesCommand, CreateShowtimeResponse>,
+                CreateShowtimesCommandHandler>();
 
         services.AddDbContext<CinemaContext>(options =>
         {
@@ -73,7 +77,6 @@ public class Startup
         services.AddLogging();
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
@@ -93,7 +96,6 @@ public class Startup
         app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cinema.Showtimes.Api"); });
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
 
         SampleData.Initialize(app);
     }

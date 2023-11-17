@@ -28,7 +28,6 @@ public class ShowtimesController : Controller
     {
         try
         {
-            //to do map to our response model
             var result = await _moviesService.GetByIdAsync(id, cancellationToken);
             return Ok(result);
         }
@@ -45,9 +44,9 @@ public class ShowtimesController : Controller
         try
         {
             var command = new CreateShowtimesCommand(request.AuditoriumId, request.MovieId, request.SessionDate);
-            await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send<CreateShowtimeResponse>(command, cancellationToken);
 
-            return Ok();
+            return Ok(result);
         }
         catch (Exception exception)
         {
