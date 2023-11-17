@@ -1,6 +1,7 @@
 using Cinema.Showtimes.Api.Application.Dtos;
 using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Application.Mappers;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Exceptions;
 using Cinema.Showtimes.Api.Domain.Repositories;

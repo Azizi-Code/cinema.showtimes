@@ -4,6 +4,7 @@ using Cinema.Showtimes.Api.Application.Commands;
 using Cinema.Showtimes.Api.Application.Constants;
 using Cinema.Showtimes.Api.Application.Dtos;
 using Cinema.Showtimes.Api.Application.Middlewares;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Application.Services;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ActionResults;

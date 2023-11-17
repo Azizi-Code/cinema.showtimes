@@ -1,10 +1,9 @@
-namespace Cinema.Showtimes.Api.Application.Dtos;
+using Cinema.Showtimes.Api.Application.Dtos;
+
+namespace Cinema.Showtimes.Api.Application.Responses;
 
 public class ReservedTicketResponse
 {
-    //Reserving the seat response will contain a GUID of the reservation, also the number of seats,
-    //the auditorium used and the movie that will be played.
-
     public Guid ReservationId { get; }
     public SeatsDto Seats { get; }
     public string MovieTitle { get; }

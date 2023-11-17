@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Cinema.Showtimes.Api.Application.Dtos;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Domain.Entities;
 
 namespace Cinema.Showtimes.Api.Application.Mappers;

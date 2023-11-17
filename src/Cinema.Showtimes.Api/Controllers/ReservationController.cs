@@ -2,6 +2,7 @@ using Cinema.Showtimes.Api.Application.Commands;
 using Cinema.Showtimes.Api.Application.Dtos;
 using Cinema.Showtimes.Api.Application.Mappers;
 using Cinema.Showtimes.Api.Application.Requests;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
