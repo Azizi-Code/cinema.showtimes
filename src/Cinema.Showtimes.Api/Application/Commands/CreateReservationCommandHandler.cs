@@ -52,10 +52,11 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
             throw new InvalidSeatsException();
 
         var reservationTimout = GetReservationTimout();
+        var ticketEntity = new TicketEntity(showtime, selectedSeats);
+        ticketEntity.ReserveSeats(reservationTimout);
 
-        TicketEntity.ReserveSeats(showtime, selectedSeats, reservationTimout);
-
-        var reservedTicket = await _ticketsRepository.CreateAsync(showtime, selectedSeats, cancellationToken);
+        var reservedTicket =
+            await _ticketsRepository.CreateAsync(ticketEntity.Showtime, ticketEntity.Seats, cancellationToken);
 
         return reservedTicket.MapToResponse();
     }

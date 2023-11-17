@@ -1,4 +1,5 @@
 ﻿using Cinema.Showtimes.Api.Domain.Exceptions;
+using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
 
 namespace Cinema.Showtimes.Api.Domain.Entities;
 
@@ -17,8 +18,8 @@ public class TicketEntity
 
     public TicketEntity(ShowtimeEntity showtime, ICollection<SeatEntity> seats)
     {
-        Showtime = showtime;
-        Seats = seats;
+        Showtime = Throw.ArgumentNullException.IfNull(showtime, nameof(showtime));
+        Seats = Throw.ArgumentNullException.IfNull(seats, nameof(seats));
         CreatedTime = DateTime.UtcNow;
     }
 
@@ -26,31 +27,30 @@ public class TicketEntity
     {
         Id = id;
         ShowtimeId = showtimeId;
-        Seats = seats;
+        Seats = Throw.ArgumentNullException.IfNull(seats, nameof(seats));
         Paid = paid;
         CreatedTime = createdTime;
     }
 
-    public static void ReserveSeats(ShowtimeEntity showtime, ICollection<SeatEntity> selectedSeats,
-        DateTime reservationTimeout)
+    public void ReserveSeats(DateTime reservationTimeout)
     {
-        CheckSelectedSeatsAreContiguous(selectedSeats);
+        CheckSelectedSeatsAreContiguous(Seats);
 
-        var soldOutTickets = showtime.Tickets?.Where(x => x.Paid).ToList();
+        var soldOutTickets = Showtime.Tickets?.Where(x => x.Paid).ToList();
         if (soldOutTickets != null && soldOutTickets.Any())
         {
             var soldOutSeats = soldOutTickets.SelectMany(x => x.Seats);
-            CheckSelectedSeatsAreNotSoldOut(selectedSeats, soldOutSeats);
+            CheckSelectedSeatsAreNotSoldOut(Seats, soldOutSeats);
         }
 
         var reservedTicketLessThanReservationTimeout =
-            showtime.Tickets?.Where(ticket => !ticket.Paid && ticket.CreatedTime >= reservationTimeout).ToList();
+            Showtime.Tickets?.Where(ticket => !ticket.Paid && ticket.CreatedTime >= reservationTimeout).ToList();
         if (reservedTicketLessThanReservationTimeout != null && reservedTicketLessThanReservationTimeout.Any())
         {
             var reservedSeatsLessThanReservationTimeout =
                 reservedTicketLessThanReservationTimeout.SelectMany(ticket => ticket.Seats);
 
-            CheckSelectedSeatsAreNotAlreadyReserved(selectedSeats, reservedSeatsLessThanReservationTimeout);
+            CheckSelectedSeatsAreNotAlreadyReserved(Seats, reservedSeatsLessThanReservationTimeout);
         }
     }
 
