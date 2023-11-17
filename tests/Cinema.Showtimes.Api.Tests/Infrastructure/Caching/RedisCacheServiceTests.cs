@@ -46,6 +46,7 @@ public class RedisCacheService_GetAsync
 
         var exception = await Assert.ThrowsAsync<RedisServiceException>(() =>
             redisCacheService.GetAsync<PersonTestClass>(DefaultCacheKey));
+
         Assert.Equal(DefaultExceptionMessage, exception.Message);
     }
 }
@@ -74,6 +75,7 @@ public class RedisCacheService_SetAsync
         var exception =
             await Assert.ThrowsAsync<RedisServiceException>(() =>
                 cacheService.SetAsync(DefaultCacheKey, DefaultCacheData));
+
         Assert.Equal(DefaultExceptionMessage, exception.Message);
     }
 }

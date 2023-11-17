@@ -63,8 +63,8 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
 
     private DateTime GetReservationTimout()
     {
-        int timeout = _configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
+        var timeout = _configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
 
-        return DateTime.UtcNow.AddSeconds(-timeout);
+        return DateTime.UtcNow.AddMinutes(-timeout);
     }
 }

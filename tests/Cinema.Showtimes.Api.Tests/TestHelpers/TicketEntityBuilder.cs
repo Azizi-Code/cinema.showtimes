@@ -5,11 +5,11 @@ namespace Cinema.Showtimes.Api.Tests.TestHelpers;
 public class TicketEntityBuilder
 {
     private readonly Guid _id = Guid.NewGuid();
-    private int _showtimeId = 1;
-    private ICollection<SeatEntity> _seats = new List<SeatEntity>() { new SeatEntity(1, 1, 1) };
-    private DateTime _createdTime = DateTime.UtcNow;
-    private bool _paid = false;
-    private ShowtimeEntity _showtime = null;
+    private readonly int _showtimeId = 1;
+    private readonly ICollection<SeatEntity> _seats = new List<SeatEntity> { new(1, 1, 1) };
+    private readonly DateTime _createdTime = new(2023, 10, 10, 10, 10, 10);
+    private readonly bool _paid;
+    private readonly ShowtimeEntity _showtime;
 
     private TicketEntityBuilder()
     {
@@ -27,6 +27,8 @@ public class TicketEntityBuilder
     }
 
     public TicketEntityBuilder WithId(Guid id) => new(id, _showtimeId, _seats, _createdTime, _paid, _showtime);
+    public TicketEntityBuilder WithPaid(bool paid) => new(_id, _showtimeId, _seats, _createdTime, paid, _showtime);
+
     public TicketEntity Build() => new(_id, _showtimeId, _seats, _paid, _createdTime);
 
 
