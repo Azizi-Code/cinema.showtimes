@@ -31,11 +31,9 @@ public class TicketEntity
         CreatedTime = createdTime;
     }
 
-    public static void ReserveSeats(ShowtimeEntity showtime, ICollection<SeatEntity> selectedSeats)
+    public static void ReserveSeats(ShowtimeEntity showtime, ICollection<SeatEntity> selectedSeats,
+        DateTime reservationTimeout)
     {
-        var reservationTimeout =
-            DateTime.UtcNow.AddMinutes(-10); //it can be implement to set in configuration but for now I skipped it.
-
         CheckSelectedSeatsAreContiguous(selectedSeats);
 
         var soldOutTickets = showtime.Tickets?.Where(x => x.Paid).ToList();

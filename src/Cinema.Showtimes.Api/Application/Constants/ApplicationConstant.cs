@@ -6,4 +6,5 @@ public static class ApplicationConstant
     public const string ApiKeyHeaderName = "X-Apikey";
     public const string MovieApiAddressKey = "MoviesApiUrl";
     public const string RedisConnectionKey = "RedisConnection";
+    public const string ReservationTimeoutKey = "ReservationTimeout";
 }

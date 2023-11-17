@@ -1,3 +1,4 @@
+using Cinema.Showtimes.Api.Application.Constants;
 using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Application.Mappers;
 using Cinema.Showtimes.Api.Application.Responses;
@@ -13,13 +14,17 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     private readonly IShowtimesRepository _showtimesRepository;
     private readonly ITicketsRepository _ticketsRepository;
     private readonly IAuditoriumsRepository _auditoriumsRepository;
+    private readonly IConfiguration _configuration;
+
 
     public CreateReservationCommandHandler(IShowtimesRepository showtimesRepository,
-        ITicketsRepository ticketsRepository, IAuditoriumsRepository auditoriumsRepository)
+        ITicketsRepository ticketsRepository, IAuditoriumsRepository auditoriumsRepository,
+        IConfiguration configuration)
     {
         _showtimesRepository = showtimesRepository;
         _ticketsRepository = ticketsRepository;
         _auditoriumsRepository = auditoriumsRepository;
+        _configuration = configuration;
     }
 
     public async Task<ReservedTicketResponse> Handle(CreateReservationCommand request,
@@ -46,10 +51,19 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         if (selectedSeats == null || selectedSeats.Count != request.SelectedSeats.Count)
             throw new InvalidSeatsException();
 
-        TicketEntity.ReserveSeats(showtime, selectedSeats);
+        var reservationTimout = GetReservationTimout();
+
+        TicketEntity.ReserveSeats(showtime, selectedSeats, reservationTimout);
 
         var reservedTicket = await _ticketsRepository.CreateAsync(showtime, selectedSeats, cancellationToken);
 
         return reservedTicket.MapToResponse();
+    }
+
+    private DateTime GetReservationTimout()
+    {
+        int timeout = _configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
+
+        return DateTime.UtcNow.AddSeconds(-timeout);
     }
 }
