@@ -57,8 +57,7 @@ public class MoviesApiClientGrpc : IMoviesApiClient
     {
         var httpHandler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback =
-                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
 
 

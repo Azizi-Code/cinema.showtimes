@@ -19,7 +19,7 @@ public class PaymentController : Controller
         _actionResultMapper = actionResultMapper;
     }
 
-    [HttpPost("reservationId")]
+    [HttpPost]
     public async Task<IActionResult> ConfirmPayment(Guid reservationId, CancellationToken cancellationToken)
     {
         try

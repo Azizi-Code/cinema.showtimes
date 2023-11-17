@@ -17,12 +17,11 @@ public class RedisCacheService : ICacheService
         try
         {
             var data = await _database.StringGetAsync(key);
-
             return !string.IsNullOrEmpty(data) ? JsonSerializer.Deserialize<T>(data) : null;
         }
-        catch
+        catch (Exception exception)
         {
-            throw new RedisServiceException();
+            throw new RedisServiceException(exception.Message);
         }
     }
 
@@ -32,9 +31,9 @@ public class RedisCacheService : ICacheService
         {
             await _database.StringSetAsync(key, JsonSerializer.Serialize(value));
         }
-        catch
+        catch (Exception exception)
         {
-            throw new RedisServiceException();
+            throw new RedisServiceException(exception.Message);
         }
     }
 }
