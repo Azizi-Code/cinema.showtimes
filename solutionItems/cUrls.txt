@@ -1,2 +1,34 @@
 Please add the cURLs of your tests here:
 
+1-Get showtime by id:
+    curl -X GET "https://localhost:7629/api/v1/showtimes/id?id=showtimeId"
+
+2-Create showtime:
+curl -X POST "https://localhost:7629/api/v1/showtimes" -H "Content-Type: application/json" -d '{
+  "auditoriumId": 1,
+  "movieId": 1,
+  "sessionDate": "2023-11-17T13:11:27.326Z"
+}' 
+
+3-Create a reservation:
+    curl -X POST "https://localhost:7629/api/v1/reservation" -H "Content-Type: application/json" -d '{
+      "showtimeId": 1,
+      "selectedSeats": {
+        "auditoriumId": 1,
+        "seats": [
+          {
+            "row": 1,
+            "seatNumber": 1
+          },
+          {
+            "row": 1,
+            "seatNumber": 2
+          }
+        ]
+      }
+    }'
+
+4-Confirm a reservation:
+    curl -X PUT "https://localhost:7629/api/v1/reservation/Confirm?reservationId=TicketGuid"
+
+
