@@ -12,9 +12,7 @@ public class TicketEntity_ReserveSeats
     public void NonContiguousSeats_ThrowsException()
     {
         var nonContiguousSeats = new List<SeatEntity>
-        {
-            new(DefaultAuditoriumId, 1, 1), new(DefaultAuditoriumId, 1, 4)
-        };
+            { new(DefaultAuditoriumId, 1, 1), new(DefaultAuditoriumId, 1, 4) };
         var ticket = new TicketEntity(DefaultShowtime, nonContiguousSeats);
 
         var result = Record.Exception(() => ticket.ReserveSeats(DateTime.UtcNow));

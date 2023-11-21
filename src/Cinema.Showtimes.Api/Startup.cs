@@ -2,6 +2,7 @@ using Cinema.Showtimes.Api.Application.Caching;
 using Cinema.Showtimes.Api.Application.Clients;
 using Cinema.Showtimes.Api.Application.Commands;
 using Cinema.Showtimes.Api.Application.Constants;
+using Cinema.Showtimes.Api.Application.HealthChecks;
 using Cinema.Showtimes.Api.Application.Middlewares;
 using Cinema.Showtimes.Api.Application.Requests;
 using Cinema.Showtimes.Api.Application.Responses;
@@ -10,7 +11,9 @@ using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ActionResults;
 using Cinema.Showtimes.Api.Infrastructure.Caching;
 using Cinema.Showtimes.Api.Infrastructure.Database;
+using HealthChecks.UI.Client;
 using MediatR;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
@@ -33,6 +36,13 @@ public class Startup
         services.AddScoped<ITicketsRepository, TicketsRepository>();
         services.AddScoped<IAuditoriumsRepository, AuditoriumsRepository>();
         services.AddScoped<IMoviesRepository, MoviesRepository>();
+
+        services.AddHealthChecks().AddRedis(Configuration.GetValue<string>(ApplicationConstant.RedisConnectionKey),
+                name: "Redis Service")
+            .AddCheck<MovieApiCustomHealthCheck>("Provided API");
+        services
+            .AddHealthChecksUI(settings => settings.AddHealthCheckEndpoint("HealthChecksApi", "/health"))
+            .AddInMemoryStorage();
 
         services.AddScoped<IMoviesApiClient, MoviesApiClientGrpc>();
         services.AddScoped<IMoviesService, MoviesService>();
@@ -95,7 +105,21 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cinema.Showtimes.Api"); });
 
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapHealthChecksUI(options =>
+            {
+                options.PageTitle = "Cinema.Showtimes.HealthChecks";
+                options.UIPath = "/dashboard";
+            });
+            endpoints.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+            });
+
+            endpoints.MapControllers();
+        });
 
         SampleData.Initialize(app);
     }
