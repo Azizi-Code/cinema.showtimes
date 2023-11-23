@@ -37,7 +37,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
             await GetAuditoriumWithSeatsAsync(requestAuditoriumId, showtime.AuditoriumId, cancellationToken);
 
 
-        var selectedSeats = CheckAndValidateSelectedSeats(request.SelectedSeats, auditorium);
+        var selectedSeats = CheckSelectedSeatsAreExistInAuditorium(request.SelectedSeats, auditorium);
         var reservationTimout = GetReservationTimout();
 
         var ticketEntity = new TicketEntity(showtime, selectedSeats);
@@ -70,7 +70,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         return auditorium;
     }
 
-    private IList<SeatEntity> CheckAndValidateSelectedSeats(IList<SeatEntity> selectedSeats,
+    private IList<SeatEntity> CheckSelectedSeatsAreExistInAuditorium(IList<SeatEntity> selectedSeats,
         AuditoriumEntity auditorium)
     {
         var seats = selectedSeats

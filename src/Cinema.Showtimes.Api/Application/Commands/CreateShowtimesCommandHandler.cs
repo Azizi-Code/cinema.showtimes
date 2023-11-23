@@ -1,6 +1,5 @@
 using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Application.Requests;
-using Cinema.Showtimes.Api.Common.BaseExceptions;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
@@ -28,22 +27,35 @@ public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesComm
     public async Task<CreateShowtimeResponse> Handle(CreateShowtimesCommand request,
         CancellationToken cancellationToken)
     {
-        var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
-            x.AuditoriumId == request.AuditoriumId && x.SessionDate == request.SessionDate, cancellationToken);
-        if (existedShowtime != null && existedShowtime.Any())
-            throw new ShowtimeAlreadyExistException("This show already existed.");
+        await CheckShowTimeIsNotAlreadyExistAsync(request.AuditoriumId, request.SessionDate, cancellationToken);
 
-        var auditorium = await _auditoriumsRepository.GetByIdAsync(request.AuditoriumId, cancellationToken);
-        if (auditorium == null)
-            throw new NotFoundException($"Auditorium with ID {request.AuditoriumId} not found.");
-
-        var movie = await _moviesRepository.GetByIdAsync(request.MovieId, cancellationToken);
-        if (movie == null)
-            throw new NotFoundException($"Movie with ID {request.MovieId} not found");
+        var auditorium = await GetAuditoriumAsync(request.AuditoriumId, cancellationToken);
+        var movie = await GetMovieAsync(request.MovieId, cancellationToken);
 
         var showtime = ShowtimeEntity.Create(movie, request.SessionDate, auditorium.Id);
 
         var result = await _showtimesRepository.CreateShowtimeAsync(showtime, cancellationToken);
         return new CreateShowtimeResponse(result.Id);
+    }
+
+    private async Task<AuditoriumEntity> GetAuditoriumAsync(int auditoriumId, CancellationToken cancellationToken)
+    {
+        var auditorium = await _auditoriumsRepository.GetByIdAsync(auditoriumId, cancellationToken);
+        return auditorium ?? throw new AuditoriumNotFoundException(auditoriumId);
+    }
+
+    private async Task<MovieEntity> GetMovieAsync(int movieId, CancellationToken cancellationToken)
+    {
+        var movie = await _moviesRepository.GetByIdAsync(movieId, cancellationToken);
+        return movie ?? throw new MovieNotFoundException(movieId.ToString());
+    }
+
+    private async Task CheckShowTimeIsNotAlreadyExistAsync(int requestAuditoriumId, DateTime requestSessionDate,
+        CancellationToken cancellationToken)
+    {
+        var existedShowtime = await _showtimesRepository.GetAllAsync(x =>
+            x.AuditoriumId == requestAuditoriumId && x.SessionDate == requestSessionDate, cancellationToken);
+        if (existedShowtime != null && existedShowtime.Any())
+            throw new ShowtimeAlreadyExistException("This show already existed.");
     }
 }

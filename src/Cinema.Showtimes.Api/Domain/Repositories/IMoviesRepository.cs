@@ -4,5 +4,5 @@ namespace Cinema.Showtimes.Api.Domain.Repositories;
 
 public interface IMoviesRepository
 {
-    Task<MovieEntity?> GetByIdAsync(int movieId, CancellationToken cancellationToken = default);
+    Task<MovieEntity?> GetByIdAsync(int movieId, CancellationToken cancellationToken);
 }

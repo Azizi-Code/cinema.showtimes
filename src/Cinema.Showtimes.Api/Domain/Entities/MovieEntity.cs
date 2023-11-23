@@ -1,4 +1,6 @@
-﻿namespace Cinema.Showtimes.Api.Domain.Entities;
+﻿using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
+
+namespace Cinema.Showtimes.Api.Domain.Entities;
 
 public class MovieEntity
 {
@@ -13,7 +15,7 @@ public class MovieEntity
     public MovieEntity(int id, string title, string imdbId, string stars, DateTime releaseDate)
     {
         Id = id;
-        Title = title;
+        Title = Throw.ArgumentException.IfNullOrWhiteSpace(title, nameof(title));
         ImdbId = imdbId;
         Stars = stars;
         ReleaseDate = releaseDate;

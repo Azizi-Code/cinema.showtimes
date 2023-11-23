@@ -23,7 +23,8 @@ public class TicketEntity_ReserveSeats
     [Fact]
     public void ReserveSoldOutSeats_ThrowsException()
     {
-        var soldOutTickets = new[] { new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, true) };
+        var soldOutTickets = new[]
+            { new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, true, default!) };
         var showtime = ShowTimeBuilder.Create().WithTickets(soldOutTickets).Build();
         var ticket = new TicketEntity(showtime, DefaultSeats);
 
@@ -37,7 +38,7 @@ public class TicketEntity_ReserveSeats
     {
         var reservedTickets = new[]
         {
-            new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, false,
+            new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, false, default!,
                 createdTime: DateTime.UtcNow.AddSeconds(60))
         };
         var showtime = ShowTimeBuilder.Create().WithTickets(reservedTickets).Build();

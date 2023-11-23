@@ -1,4 +1,6 @@
-﻿namespace Cinema.Showtimes.Api.Domain.Entities;
+﻿using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
+
+namespace Cinema.Showtimes.Api.Domain.Entities;
 
 public class AuditoriumEntity
 {
@@ -9,11 +11,11 @@ public class AuditoriumEntity
     public AuditoriumEntity(ICollection<SeatEntity> seats, IList<ShowtimeEntity>? showtimes = default)
     {
         Showtimes = showtimes;
-        Seats = seats;
+        Seats = Throw.ArgumentNullException.IfNull(seats, nameof(seats));
     }
 
-    public AuditoriumEntity(int id, ICollection<SeatEntity> seats, IList<ShowtimeEntity>? showtimes = default) : this(
-        seats, showtimes) => Id = id;
+    public AuditoriumEntity(int id, ICollection<SeatEntity> seats, IList<ShowtimeEntity>? showtimes = default) :
+        this(seats, showtimes) => Id = id;
 
     private AuditoriumEntity()
     {

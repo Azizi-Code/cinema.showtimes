@@ -24,7 +24,7 @@ public class TicketEntity
     }
 
     public TicketEntity(Guid id, int showtimeId, ICollection<SeatEntity> seats, bool paid,
-        ShowtimeEntity showtime = null,
+        ShowtimeEntity showtime,
         DateTime createdTime = new())
     {
         Id = id;
