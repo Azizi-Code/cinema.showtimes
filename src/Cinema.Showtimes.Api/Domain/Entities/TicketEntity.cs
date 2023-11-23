@@ -23,12 +23,15 @@ public class TicketEntity
         CreatedTime = DateTime.UtcNow;
     }
 
-    public TicketEntity(Guid id, int showtimeId, ICollection<SeatEntity> seats, bool paid, DateTime createdTime = new())
+    public TicketEntity(Guid id, int showtimeId, ICollection<SeatEntity> seats, bool paid,
+        ShowtimeEntity showtime = null,
+        DateTime createdTime = new())
     {
         Id = id;
         ShowtimeId = showtimeId;
         Seats = Throw.ArgumentNullException.IfNull(seats, nameof(seats));
         Paid = paid;
+        Showtime = showtime;
         CreatedTime = createdTime;
     }
 

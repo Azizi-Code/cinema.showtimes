@@ -29,7 +29,10 @@ public class TicketEntityBuilder
     public TicketEntityBuilder WithId(Guid id) => new(id, _showtimeId, _seats, _createdTime, _paid, _showtime);
     public TicketEntityBuilder WithPaid(bool paid) => new(_id, _showtimeId, _seats, _createdTime, paid, _showtime);
 
-    public TicketEntity Build() => new(_id, _showtimeId, _seats, _paid, _createdTime);
+    public TicketEntityBuilder WithShowTime(ShowtimeEntity showtime) =>
+        new(_id, _showtimeId, _seats, _createdTime, _paid, showtime);
+
+    public TicketEntity Build() => new(_id, _showtimeId, _seats, _paid, _showtime, _createdTime);
 
 
     public static TicketEntityBuilder Create() => new();

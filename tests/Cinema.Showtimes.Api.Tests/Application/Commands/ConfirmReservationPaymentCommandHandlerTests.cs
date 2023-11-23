@@ -9,7 +9,7 @@ using static Cinema.Showtimes.Api.Tests.Application.Commands.ConfirmReservationP
 
 namespace Cinema.Showtimes.Api.Tests.Application.Commands;
 
-public class ConfirmReservationPaymentCommandHandlerTests
+public class ConfirmReservationPaymentCommandHandler_Handle
 {
     [Fact]
     public async Task TicketExist_ConfirmsPayment()
@@ -17,10 +17,10 @@ public class ConfirmReservationPaymentCommandHandlerTests
         var ticketsRepository = CreateTicketRepository(DefaultTicketId, DefaultTicket);
         var paymentCommandHandler = CreateSut(ticketsRepository);
 
-        await paymentCommandHandler.Handle(DefaultPaymentCommand, CancellationToken.None);
+        await paymentCommandHandler.Handle(DefaultPaymentCommand, default);
 
         await ticketsRepository.Received(1)
-            .ConfirmPaymentAsync(Arg.Is<TicketEntity>(t => t == DefaultTicket), CancellationToken.None);
+            .ConfirmPaymentAsync(Arg.Is<TicketEntity>(t => t == DefaultTicket), default);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class ConfirmReservationPaymentCommandHandlerTests
         var ticketsRepository = CreateTicketRepository(DefaultTicketId);
         var paymentCommandHandler = CreateSut(ticketsRepository);
 
-        Func<Task> act = async () => await paymentCommandHandler.Handle(DefaultPaymentCommand, CancellationToken.None);
+        Func<Task> act = async () => await paymentCommandHandler.Handle(DefaultPaymentCommand, default);
 
         var exception = await Assert.ThrowsAsync<TicketNotFoundException>(act);
         Assert.Equal($"Ticket not found: Reservation ID '{DefaultTicketId}'.", exception.Message);
@@ -49,7 +49,7 @@ public static class ConfirmReservationPaymentCommandHandlerTestsHarness
     public static ITicketsRepository CreateTicketRepository(Guid reservationId, TicketEntity? ticket = null)
     {
         var ticketsRepository = Substitute.For<ITicketsRepository>();
-        ticketsRepository.GetAsync(reservationId, CancellationToken.None).Returns(ticket);
+        ticketsRepository.GetAsync(reservationId, default).Returns(ticket);
         return ticketsRepository;
     }
 }

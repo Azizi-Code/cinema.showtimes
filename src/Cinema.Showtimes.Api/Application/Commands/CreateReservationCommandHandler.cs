@@ -30,35 +30,58 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     public async Task<ReservedTicketResponse> Handle(CreateReservationCommand request,
         CancellationToken cancellationToken)
     {
-        var showtime =
-            await _showtimesRepository.GetWithTicketsAndMovieByIdAsync(request.ShowtimeId, cancellationToken);
-        if (showtime == null)
-            throw new ShowtimeNotFound(request.ShowtimeId);
+        var showtime = await GetShowTimeWithTicketsAndMovieAsync(request.ShowtimeId, cancellationToken);
 
-        var auditoriumId = request.SelectedSeats.FirstOrDefault().AuditoriumId;
-        var auditorium = await _auditoriumsRepository.GetWithSeatsByIdAsync(auditoriumId, cancellationToken);
-        if (auditorium == null)
-            throw new AuditoriumNotFoundException(request.SelectedSeats.FirstOrDefault().AuditoriumId);
+        var requestAuditoriumId = request.SelectedSeats.FirstOrDefault().AuditoriumId;
+        var auditorium =
+            await GetAuditoriumWithSeatsAsync(requestAuditoriumId, showtime.AuditoriumId, cancellationToken);
 
-        if (showtime.AuditoriumId != auditoriumId)
-            throw new InvalidAuditoriumException();
 
-        var selectedSeats = request.SelectedSeats
-            .Select(seat => auditorium.Seats.FirstOrDefault(x =>
-                x.AuditoriumId == seat.AuditoriumId && x.SeatNumber == seat.SeatNumber && x.Row == seat.Row))
-            .Where(res => res != null)?.ToList();
-
-        if (selectedSeats == null || selectedSeats.Count != request.SelectedSeats.Count)
-            throw new InvalidSeatsException();
-
+        var selectedSeats = CheckAndValidateSelectedSeats(request.SelectedSeats, auditorium);
         var reservationTimout = GetReservationTimout();
+
         var ticketEntity = new TicketEntity(showtime, selectedSeats);
         ticketEntity.ReserveSeats(reservationTimout);
 
         var reservedTicket =
             await _ticketsRepository.CreateAsync(ticketEntity.Showtime, ticketEntity.Seats, cancellationToken);
 
-        return reservedTicket.MapToResponse();
+        return reservedTicket.MapToReservedTicketResponse();
+    }
+
+    private async Task<ShowtimeEntity> GetShowTimeWithTicketsAndMovieAsync(int showtimeId,
+        CancellationToken cancellationToken)
+    {
+        var showtime = await _showtimesRepository.GetWithTicketsAndMovieByIdAsync(showtimeId, cancellationToken);
+        return showtime ?? throw new ShowtimeNotFoundException(showtimeId);
+    }
+
+    private async Task<AuditoriumEntity> GetAuditoriumWithSeatsAsync(int requestAuditoriumId, int showtimeAuditoriumId,
+        CancellationToken cancellationToken)
+    {
+        var auditorium = await _auditoriumsRepository.GetWithSeatsByIdAsync(requestAuditoriumId, cancellationToken);
+
+        if (auditorium == null)
+            throw new AuditoriumNotFoundException(requestAuditoriumId);
+
+        if (showtimeAuditoriumId != auditorium?.Id)
+            throw new AuditoriumAndShowTimeAuditoriumNotMatchedException(requestAuditoriumId);
+
+        return auditorium;
+    }
+
+    private IList<SeatEntity> CheckAndValidateSelectedSeats(IList<SeatEntity> selectedSeats,
+        AuditoriumEntity auditorium)
+    {
+        var seats = selectedSeats
+            .Select(seat => auditorium.Seats.FirstOrDefault(x =>
+                x.AuditoriumId == seat.AuditoriumId && x.SeatNumber == seat.SeatNumber && x.Row == seat.Row))
+            .Where(res => res != null)?.ToList();
+
+        if (seats == null || seats.Count != selectedSeats.Count)
+            throw new InvalidSeatsException();
+
+        return seats;
     }
 
     private DateTime GetReservationTimout()

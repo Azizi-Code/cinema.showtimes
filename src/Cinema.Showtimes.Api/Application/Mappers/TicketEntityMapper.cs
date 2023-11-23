@@ -7,7 +7,7 @@ namespace Cinema.Showtimes.Api.Application.Mappers;
 
 public static class TicketEntityMapper
 {
-    public static ReservedTicketResponse MapToResponse(this TicketEntity ticket) =>
+    public static ReservedTicketResponse MapToReservedTicketResponse(this TicketEntity ticket) =>
         new(ticket.Id, ticket.Seats.MapToDto(), ticket.Showtime.Movie.Title);
 }
 

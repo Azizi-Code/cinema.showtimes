@@ -37,7 +37,8 @@ public class TicketEntity_ReserveSeats
     {
         var reservedTickets = new[]
         {
-            new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, false, DateTime.UtcNow.AddSeconds(60))
+            new TicketEntity(Guid.NewGuid(), DefaultShowTimeId, DefaultSeats, false,
+                createdTime: DateTime.UtcNow.AddSeconds(60))
         };
         var showtime = ShowTimeBuilder.Create().WithTickets(reservedTickets).Build();
         var ticket = new TicketEntity(showtime, DefaultSeats);

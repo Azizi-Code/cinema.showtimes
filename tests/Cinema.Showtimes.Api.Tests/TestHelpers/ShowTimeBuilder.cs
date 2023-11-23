@@ -5,7 +5,7 @@ namespace Cinema.Showtimes.Api.Tests.TestHelpers;
 public class ShowTimeBuilder
 {
     private readonly int _id = 1;
-    private readonly MovieEntity _movie = new(1, "", "", "", DateTime.Now);
+    private readonly MovieEntity _movie = new(1, "Title", "ImdbId", "Stars", DateTime.Now);
     private readonly DateTime _sessionDate = new(2023, 10, 10, 10, 10, 10);
     private readonly int _auditoriumId = 1;
     private readonly ICollection<TicketEntity> _tickets;
