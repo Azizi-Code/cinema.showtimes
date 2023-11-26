@@ -1,4 +1,5 @@
 using Cinema.Showtimes.Api.Application.Requests;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;
 using MediatR;
 

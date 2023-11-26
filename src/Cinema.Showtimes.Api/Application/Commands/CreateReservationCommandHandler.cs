@@ -36,15 +36,13 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         var auditorium =
             await GetAuditoriumWithSeatsAsync(requestAuditoriumId, showtime.AuditoriumId, cancellationToken);
 
-
         var selectedSeats = CheckSelectedSeatsAreExistInAuditorium(request.SelectedSeats, auditorium);
         var reservationTimout = GetReservationTimout();
 
-        var ticketEntity = new TicketEntity(showtime, selectedSeats);
-        ticketEntity.ReserveSeats(reservationTimout);
+        var ticket = new TicketEntity(showtime, selectedSeats);
+        ticket.CheckSeatsAreAvailableForReservation(reservationTimout);
 
-        var reservedTicket =
-            await _ticketsRepository.CreateAsync(ticketEntity.Showtime, ticketEntity.Seats, cancellationToken);
+        var reservedTicket = await _ticketsRepository.CreateAsync(ticket.Showtime, ticket.Seats, cancellationToken);
 
         return reservedTicket.MapToReservedTicketResponse();
     }
@@ -87,7 +85,6 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     private DateTime GetReservationTimout()
     {
         var timeout = _configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
-
         return DateTime.UtcNow.AddMinutes(-timeout);
     }
 }

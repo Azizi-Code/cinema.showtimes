@@ -15,7 +15,7 @@ public class TicketEntity_ReserveSeats
             { new(DefaultAuditoriumId, 1, 1), new(DefaultAuditoriumId, 1, 4) };
         var ticket = new TicketEntity(DefaultShowtime, nonContiguousSeats);
 
-        var result = Record.Exception(() => ticket.ReserveSeats(DateTime.UtcNow));
+        var result = Record.Exception(() => ticket.CheckSeatsAreAvailableForReservation(DateTime.UtcNow));
 
         Assert.IsType<NotContiguousSeatsException>(result);
     }
@@ -28,7 +28,7 @@ public class TicketEntity_ReserveSeats
         var showtime = ShowTimeBuilder.Create().WithTickets(soldOutTickets).Build();
         var ticket = new TicketEntity(showtime, DefaultSeats);
 
-        var result = Record.Exception(() => ticket.ReserveSeats(DateTime.UtcNow));
+        var result = Record.Exception(() => ticket.CheckSeatsAreAvailableForReservation(DateTime.UtcNow));
 
         Assert.IsType<SeatsSoldOutException>(result);
     }
@@ -44,7 +44,7 @@ public class TicketEntity_ReserveSeats
         var showtime = ShowTimeBuilder.Create().WithTickets(reservedTickets).Build();
         var ticket = new TicketEntity(showtime, DefaultSeats);
 
-        var result = Record.Exception(() => ticket.ReserveSeats(DateTime.UtcNow));
+        var result = Record.Exception(() => ticket.CheckSeatsAreAvailableForReservation(DateTime.UtcNow));
 
         Assert.IsType<SeatsAlreadyReservedException>(result);
     }

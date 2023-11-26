@@ -1,5 +1,6 @@
 using Cinema.Showtimes.Api.Application.Exceptions;
 using Cinema.Showtimes.Api.Application.Requests;
+using Cinema.Showtimes.Api.Application.Responses;
 using Cinema.Showtimes.Api.Domain.Entities;
 using Cinema.Showtimes.Api.Domain.Repositories;
 using Cinema.Showtimes.Api.Infrastructure.ExceptionHandlers;

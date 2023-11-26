@@ -24,10 +24,9 @@ public class TicketEntity
     }
 
     public TicketEntity(Guid id, int showtimeId, ICollection<SeatEntity> seats, bool paid,
-        ShowtimeEntity showtime,
-        DateTime createdTime = new())
+        ShowtimeEntity showtime, DateTime createdTime = new())
     {
-        Id = id;
+        Id = Throw.ArgumentNullException.IfNull(id, nameof(id));
         ShowtimeId = showtimeId;
         Seats = Throw.ArgumentNullException.IfNull(seats, nameof(seats));
         Paid = paid;
@@ -35,31 +34,16 @@ public class TicketEntity
         CreatedTime = createdTime;
     }
 
-    public void ReserveSeats(DateTime reservationTimeout)
+    public void CheckSeatsAreAvailableForReservation(DateTime reservationTimeout)
     {
-        CheckSelectedSeatsAreContiguous(Seats);
-
-        var soldOutTickets = Showtime.Tickets?.Where(x => x.Paid).ToList();
-        if (soldOutTickets != null && soldOutTickets.Any())
-        {
-            var soldOutSeats = soldOutTickets.SelectMany(x => x.Seats);
-            CheckSelectedSeatsAreNotSoldOut(Seats, soldOutSeats);
-        }
-
-        var reservedTicketLessThanReservationTimeout =
-            Showtime.Tickets?.Where(ticket => !ticket.Paid && ticket.CreatedTime >= reservationTimeout).ToList();
-        if (reservedTicketLessThanReservationTimeout != null && reservedTicketLessThanReservationTimeout.Any())
-        {
-            var reservedSeatsLessThanReservationTimeout =
-                reservedTicketLessThanReservationTimeout.SelectMany(ticket => ticket.Seats);
-
-            CheckSelectedSeatsAreNotAlreadyReserved(Seats, reservedSeatsLessThanReservationTimeout);
-        }
+        CheckSelectedSeatsAreContiguous();
+        CheckSelectedSeatsAreNotSoldOut();
+        CheckSelectedSeatsAreNotAlreadyReserved(reservationTimeout);
     }
 
-    private static void CheckSelectedSeatsAreContiguous(IEnumerable<SeatEntity> selectedSeats)
+    private void CheckSelectedSeatsAreContiguous()
     {
-        var sortedSeats = selectedSeats.OrderBy(x => x.Row).ThenBy(x => x.SeatNumber).ToList();
+        var sortedSeats = Seats.OrderBy(x => x.Row).ThenBy(x => x.SeatNumber).ToList();
 
         for (int i = 0; i < sortedSeats.Count - 1; i++)
         {
@@ -69,22 +53,32 @@ public class TicketEntity
         }
     }
 
-    private static void CheckSelectedSeatsAreNotAlreadyReserved(IEnumerable<SeatEntity> selectedSeats,
-        IEnumerable<SeatEntity> reservedSeatsLessThanTimeout)
+    private void CheckSelectedSeatsAreNotSoldOut()
     {
-        var reservedSeatsHash = reservedSeatsLessThanTimeout.Select(seat => (seat.Row, seat.SeatNumber)).ToHashSet();
-        var result = selectedSeats.Any(seat => reservedSeatsHash.Contains((seat.Row, seat.SeatNumber)));
-
-        if (result) throw new SeatsAlreadyReservedException();
+        var soldOutTickets = Showtime.Tickets?.Where(x => x.Paid).ToList();
+        if (soldOutTickets != null && soldOutTickets.Any())
+        {
+            var result = CheckSeatsAreAvailable(soldOutTickets);
+            if (result) throw new SeatsSoldOutException();
+        }
     }
 
-    private static void CheckSelectedSeatsAreNotSoldOut(IEnumerable<SeatEntity> selectedSeats,
-        IEnumerable<SeatEntity> unavailableSeats)
+    private void CheckSelectedSeatsAreNotAlreadyReserved(DateTime reservationTimeout)
     {
-        var unavailableSeatsHashSet = unavailableSeats.Select(x => (x.Row, x.SeatNumber)).ToHashSet();
-        var result = selectedSeats.Any(seat => unavailableSeatsHashSet.Contains((seat.Row, seat.SeatNumber)));
+        var reservedTickets = Showtime.Tickets
+            ?.Where(ticket => !ticket.Paid && ticket.CreatedTime >= reservationTimeout).ToList();
+        if (reservedTickets != null && reservedTickets.Any())
+        {
+            var result = CheckSeatsAreAvailable(reservedTickets);
+            if (result) throw new SeatsAlreadyReservedException();
+        }
+    }
 
-        if (result) throw new SeatsSoldOutException();
+    private bool CheckSeatsAreAvailable(IEnumerable<TicketEntity> tickets)
+    {
+        var seats = tickets.SelectMany(x => x.Seats);
+        var seatsHashSet = seats.Select(x => (x.Row, x.SeatNumber)).ToHashSet();
+        return Seats.Any(seat => seatsHashSet.Contains((seat.Row, seat.SeatNumber)));
     }
 
     public TicketEntity ConfirmPayment()
