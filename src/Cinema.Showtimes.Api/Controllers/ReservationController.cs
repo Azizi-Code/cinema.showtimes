@@ -40,8 +40,7 @@ public class ReservationController : Controller
     }
 
     [HttpPut("Confirm")]
-    public async Task<IActionResult> ConfirmReservation(Guid reservationId,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> ConfirmReservation(Guid reservationId, CancellationToken cancellationToken)
     {
         try
         {
