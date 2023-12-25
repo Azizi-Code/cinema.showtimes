@@ -2,9 +2,4 @@ using Cinema.Showtimes.Api.Common.BaseExceptions;
 
 namespace Cinema.Showtimes.Api.Domain.Exceptions;
 
-public class NotContiguousSeatsException : UnprocessableEntityException
-{
-    public NotContiguousSeatsException() : base("Selected seats are not contiguous.")
-    {
-    }
-}
+public class NotContiguousSeatsException() : UnprocessableEntityException("Selected seats are not contiguous.");

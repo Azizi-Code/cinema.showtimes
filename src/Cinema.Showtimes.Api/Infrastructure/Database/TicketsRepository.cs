@@ -4,21 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Database;
 
-public class TicketsRepository : ITicketsRepository
+public class TicketsRepository(CinemaContext context) : ITicketsRepository
 {
-    private readonly CinemaContext _context;
-
-    public TicketsRepository(CinemaContext context)
-    {
-        _context = context;
-    }
-
     public Task<TicketEntity?> GetAsync(Guid id, CancellationToken cancellationToken) =>
-        _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancellationToken)
     {
-        return await _context.Tickets
+        return await context.Tickets
             .Include(x => x.Showtime)
             .Include(x => x.Seats)
             .Where(x => x.ShowtimeId == showtimeId)
@@ -28,16 +21,16 @@ public class TicketsRepository : ITicketsRepository
     public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats,
         CancellationToken cancellationToken)
     {
-        var ticket = _context.Tickets.Add(new TicketEntity(showtime, new List<SeatEntity>(selectedSeats)));
-        await _context.SaveChangesAsync(cancellationToken);
+        var ticket = context.Tickets.Add(new TicketEntity(showtime, new List<SeatEntity>(selectedSeats)));
+        await context.SaveChangesAsync(cancellationToken);
 
         return ticket.Entity;
     }
 
     public async Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancellationToken)
     {
-        _context.Update(ticket);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Update(ticket);
+        await context.SaveChangesAsync(cancellationToken);
 
         return ticket;
     }

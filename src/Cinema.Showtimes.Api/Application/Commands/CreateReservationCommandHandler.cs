@@ -9,24 +9,13 @@ using MediatR;
 
 namespace Cinema.Showtimes.Api.Application.Commands;
 
-public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand, ReservedTicketResponse>
+public class CreateReservationCommandHandler(
+    IShowtimesRepository showtimesRepository,
+    ITicketsRepository ticketsRepository,
+    IAuditoriumsRepository auditoriumsRepository,
+    IConfiguration configuration)
+    : IRequestHandler<CreateReservationCommand, ReservedTicketResponse>
 {
-    private readonly IShowtimesRepository _showtimesRepository;
-    private readonly ITicketsRepository _ticketsRepository;
-    private readonly IAuditoriumsRepository _auditoriumsRepository;
-    private readonly IConfiguration _configuration;
-
-
-    public CreateReservationCommandHandler(IShowtimesRepository showtimesRepository,
-        ITicketsRepository ticketsRepository, IAuditoriumsRepository auditoriumsRepository,
-        IConfiguration configuration)
-    {
-        _showtimesRepository = showtimesRepository;
-        _ticketsRepository = ticketsRepository;
-        _auditoriumsRepository = auditoriumsRepository;
-        _configuration = configuration;
-    }
-
     public async Task<ReservedTicketResponse> Handle(CreateReservationCommand request,
         CancellationToken cancellationToken)
     {
@@ -42,7 +31,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
         var ticket = new TicketEntity(showtime, selectedSeats);
         ticket.CheckSeatsAreAvailableForReservation(reservationTimout);
 
-        var reservedTicket = await _ticketsRepository.CreateAsync(ticket.Showtime, ticket.Seats, cancellationToken);
+        var reservedTicket = await ticketsRepository.CreateAsync(ticket.Showtime, ticket.Seats, cancellationToken);
 
         return reservedTicket.MapToReservedTicketResponse();
     }
@@ -50,14 +39,14 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     private async Task<ShowtimeEntity> GetShowTimeWithTicketsAndMovieAsync(int showtimeId,
         CancellationToken cancellationToken)
     {
-        var showtime = await _showtimesRepository.GetWithTicketsAndMovieByIdAsync(showtimeId, cancellationToken);
+        var showtime = await showtimesRepository.GetWithTicketsAndMovieByIdAsync(showtimeId, cancellationToken);
         return showtime ?? throw new ShowtimeNotFoundException(showtimeId);
     }
 
     private async Task<AuditoriumEntity> GetAuditoriumWithSeatsAsync(int requestAuditoriumId, int showtimeAuditoriumId,
         CancellationToken cancellationToken)
     {
-        var auditorium = await _auditoriumsRepository.GetWithSeatsByIdAsync(requestAuditoriumId, cancellationToken);
+        var auditorium = await auditoriumsRepository.GetWithSeatsByIdAsync(requestAuditoriumId, cancellationToken);
 
         if (auditorium == null)
             throw new AuditoriumNotFoundException(requestAuditoriumId);
@@ -84,7 +73,7 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
 
     private DateTime GetReservationTimout()
     {
-        var timeout = _configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
+        var timeout = configuration.GetValue<int>(ApplicationConstant.ReservationTimeoutKey);
         return DateTime.UtcNow.AddMinutes(-timeout);
     }
 }

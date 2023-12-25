@@ -5,12 +5,9 @@ using StackExchange.Redis;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Caching;
 
-public class RedisCacheService : ICacheService
+public class RedisCacheService(IConnectionMultiplexer connectionMultiplexer) : ICacheService
 {
-    private readonly IDatabase _database;
-
-    public RedisCacheService(IConnectionMultiplexer connectionMultiplexer) =>
-        _database = connectionMultiplexer.GetDatabase();
+    private readonly IDatabase _database = connectionMultiplexer.GetDatabase();
 
     public async Task<T?> GetAsync<T>(string key) where T : class
     {

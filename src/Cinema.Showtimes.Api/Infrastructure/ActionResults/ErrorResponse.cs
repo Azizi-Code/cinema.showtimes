@@ -2,11 +2,9 @@ using System.Net;
 
 namespace Cinema.Showtimes.Api.Infrastructure.ActionResults;
 
-public class ErrorResponse
+public class ErrorResponse(Error error)
 {
-    public Error Error { get; }
-
-    public ErrorResponse(Error error) => Error = error;
+    public Error Error { get; } = error;
 
     public static ErrorResponse Create(HttpStatusCode statusCode, string errorMessage, string parameterName) =>
         new(
@@ -16,35 +14,20 @@ public class ErrorResponse
                 new[] { new ErrorDetail(parameterName) }));
 }
 
-public class Error
+public class Error(string code, string message, ErrorDetail[]? details = null)
 {
-    public string Code { get; }
-    public string Message { get; }
-    public ErrorDetail[] Details { get; }
-
-    public Error(string code, string message, ErrorDetail[]? details = null)
-    {
-        Code = code;
-        Message = message;
-        Details = details ?? Array.Empty<ErrorDetail>();
-    }
+    public string Code { get; } = code;
+    public string Message { get; } = message;
+    public ErrorDetail[] Details { get; } = details ?? Array.Empty<ErrorDetail>();
 }
 
-public class ErrorDetail
+public class ErrorDetail(string target, ErrorMessage[]? errors = null)
 {
-    public string Target { get; }
-    public ErrorMessage[] Errors { get; }
-
-    public ErrorDetail(string target, ErrorMessage[]? errors = null)
-    {
-        Target = target;
-        Errors = errors ?? Array.Empty<ErrorMessage>();
-    }
+    public string Target { get; } = target;
+    public ErrorMessage[] Errors { get; } = errors ?? Array.Empty<ErrorMessage>();
 }
 
-public class ErrorMessage
+public class ErrorMessage(string message)
 {
-    public string Message { get; }
-
-    public ErrorMessage(string message) => Message = message;
+    public string Message { get; } = message;
 }

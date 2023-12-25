@@ -2,9 +2,4 @@ using Cinema.Showtimes.Api.Common.BaseExceptions;
 
 namespace Cinema.Showtimes.Api.Domain.Exceptions;
 
-public class InvalidSeatsException : UnprocessableEntityException
-{
-    public InvalidSeatsException() : base("The selected seats are not valid.")
-    {
-    }
-}
+public class InvalidSeatsException() : UnprocessableEntityException("The selected seats are not valid.");

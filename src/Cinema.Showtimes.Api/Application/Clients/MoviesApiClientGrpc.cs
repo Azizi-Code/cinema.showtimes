@@ -7,12 +7,10 @@ using ProtoDefinitions;
 
 namespace Cinema.Showtimes.Api.Application.Clients;
 
-public class MoviesApiClientGrpc : IMoviesApiClient
+public class MoviesApiClientGrpc(IConfiguration configuration) : IMoviesApiClient
 {
-    private readonly IConfiguration _configuration;
-
-    public MoviesApiClientGrpc(IConfiguration configuration) =>
-        _configuration = Throw.ArgumentNullException.IfNull(configuration, nameof(configuration));
+    private readonly IConfiguration _configuration =
+        Throw.ArgumentNullException.IfNull(configuration, nameof(configuration));
 
     public async Task<showListResponse> GetAllAsync()
     {

@@ -2,16 +2,9 @@ using Cinema.Showtimes.Api.Application.Dtos;
 
 namespace Cinema.Showtimes.Api.Application.Responses;
 
-public class ReservedTicketResponse
+public class ReservedTicketResponse(Guid reservationId, SeatsDto seats, string movieTitle)
 {
-    public Guid ReservationId { get; }
-    public SeatsDto Seats { get; }
-    public string MovieTitle { get; }
-
-    public ReservedTicketResponse(Guid reservationId, SeatsDto seats, string movieTitle)
-    {
-        ReservationId = reservationId;
-        Seats = seats;
-        MovieTitle = movieTitle;
-    }
+    public Guid ReservationId { get; } = reservationId;
+    public SeatsDto Seats { get; } = seats;
+    public string MovieTitle { get; } = movieTitle;
 }

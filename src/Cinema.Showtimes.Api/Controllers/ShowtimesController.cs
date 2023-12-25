@@ -10,31 +10,23 @@ namespace Cinema.Showtimes.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/showtimes")]
-public class ShowtimesController : Controller
+public class ShowtimesController(
+    IMoviesService moviesService,
+    IActionResultMapper<ShowtimesController> actionResultMapper,
+    IMediator mediator)
+    : Controller
 {
-    private readonly IMoviesService _moviesService;
-    private readonly IActionResultMapper<ShowtimesController> _actionResultMapper;
-    private readonly IMediator _mediator;
-
-    public ShowtimesController(IMoviesService moviesService,
-        IActionResultMapper<ShowtimesController> actionResultMapper, IMediator mediator)
-    {
-        _moviesService = moviesService;
-        _actionResultMapper = actionResultMapper;
-        _mediator = mediator;
-    }
-
     [HttpGet("id")]
     public async Task<IActionResult> GetMovieById(string id, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _moviesService.GetByIdAsync(id, cancellationToken);
+            var result = await moviesService.GetByIdAsync(id, cancellationToken);
             return Ok(result);
         }
         catch (Exception exception)
         {
-            return _actionResultMapper.Map(exception);
+            return actionResultMapper.Map(exception);
         }
     }
 
@@ -45,13 +37,13 @@ public class ShowtimesController : Controller
         try
         {
             var command = new CreateShowtimesCommand(request.AuditoriumId, request.MovieId, request.SessionDate);
-            var result = await _mediator.Send<CreateShowtimeResponse>(command, cancellationToken);
+            var result = await mediator.Send<CreateShowtimeResponse>(command, cancellationToken);
 
             return Ok(result);
         }
         catch (Exception exception)
         {
-            return _actionResultMapper.Map(exception);
+            return actionResultMapper.Map(exception);
         }
     }
 }

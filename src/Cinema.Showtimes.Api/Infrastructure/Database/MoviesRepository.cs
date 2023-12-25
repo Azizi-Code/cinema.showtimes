@@ -4,17 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Database;
 
-public class MoviesRepository : IMoviesRepository
+public class MoviesRepository(CinemaContext context) : IMoviesRepository
 {
-    private readonly CinemaContext _context;
-
-    public MoviesRepository(CinemaContext context)
-    {
-        _context = context;
-    }
-
     public async Task<MovieEntity?> GetByIdAsync(int movieId, CancellationToken cancellationToken)
     {
-        return await _context.Movies.FirstOrDefaultAsync(x => x.Id == movieId, cancellationToken);
+        return await context.Movies.FirstOrDefaultAsync(x => x.Id == movieId, cancellationToken);
     }
 }

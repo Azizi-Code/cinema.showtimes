@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Database;
 
-public class CinemaContext : DbContext
+public class CinemaContext(DbContextOptions<CinemaContext> options) : DbContext(options)
 {
-    public CinemaContext(DbContextOptions<CinemaContext> options) : base(options)
-    {
-    }
-
     public DbSet<AuditoriumEntity> Auditoriums { get; set; }
     public DbSet<ShowtimeEntity> ShowTimes { get; set; }
     public DbSet<MovieEntity> Movies { get; set; }

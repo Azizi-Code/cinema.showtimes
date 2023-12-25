@@ -8,21 +8,20 @@ using MediatR;
 
 namespace Cinema.Showtimes.Api.Application.Commands;
 
-public class CreateShowtimesCommandHandler : IRequestHandler<CreateShowtimesCommand, CreateShowtimeResponse>
+public class CreateShowtimesCommandHandler(
+    IShowtimesRepository showtimesRepository,
+    IAuditoriumsRepository auditoriumsRepository,
+    IMoviesRepository moviesRepository)
+    : IRequestHandler<CreateShowtimesCommand, CreateShowtimeResponse>
 {
-    private readonly IShowtimesRepository _showtimesRepository;
-    private readonly IAuditoriumsRepository _auditoriumsRepository;
-    private readonly IMoviesRepository _moviesRepository;
+    private readonly IShowtimesRepository _showtimesRepository =
+        Throw.ArgumentNullException.IfNull(showtimesRepository, nameof(showtimesRepository));
 
+    private readonly IAuditoriumsRepository _auditoriumsRepository =
+        Throw.ArgumentNullException.IfNull(auditoriumsRepository, nameof(auditoriumsRepository));
 
-    public CreateShowtimesCommandHandler(IShowtimesRepository showtimesRepository,
-        IAuditoriumsRepository auditoriumsRepository, IMoviesRepository moviesRepository)
-    {
-        _showtimesRepository = Throw.ArgumentNullException.IfNull(showtimesRepository, nameof(showtimesRepository));
-        _auditoriumsRepository =
-            Throw.ArgumentNullException.IfNull(auditoriumsRepository, nameof(auditoriumsRepository));
-        _moviesRepository = Throw.ArgumentNullException.IfNull(moviesRepository, nameof(moviesRepository));
-    }
+    private readonly IMoviesRepository _moviesRepository =
+        Throw.ArgumentNullException.IfNull(moviesRepository, nameof(moviesRepository));
 
 
     public async Task<CreateShowtimeResponse> Handle(CreateShowtimesCommand request,

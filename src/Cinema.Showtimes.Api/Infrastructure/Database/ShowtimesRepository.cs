@@ -5,25 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Database;
 
-public class ShowtimesRepository : IShowtimesRepository
+public class ShowtimesRepository(CinemaContext context) : IShowtimesRepository
 {
-    private readonly CinemaContext _context;
-
-    public ShowtimesRepository(CinemaContext context)
-    {
-        _context = context;
-    }
-
     public async Task<ShowtimeEntity?> GetWithMoviesByIdAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.ShowTimes
+        return await context.ShowTimes
             .Include(x => x.Movie)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<ShowtimeEntity?> GetWithTicketsAndMovieByIdAsync(int id, CancellationToken cancellationToken)
     {
-        return await _context.ShowTimes
+        return await context.ShowTimes
             .Include(x => x.Tickets)
             .Include(x => x.Movie)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -34,12 +27,12 @@ public class ShowtimesRepository : IShowtimesRepository
     {
         if (filter == null)
         {
-            return await _context.ShowTimes
+            return await context.ShowTimes
                 .Include(x => x.Movie)
                 .ToListAsync(cancellationToken);
         }
 
-        return await _context.ShowTimes
+        return await context.ShowTimes
             .Include(x => x.Movie)
             .Where(filter)
             .ToListAsync(cancellationToken);
@@ -48,8 +41,8 @@ public class ShowtimesRepository : IShowtimesRepository
     public async Task<ShowtimeEntity> CreateShowtimeAsync(ShowtimeEntity showtimeEntity,
         CancellationToken cancellationToken)
     {
-        var showtime = await _context.ShowTimes.AddAsync(showtimeEntity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        var showtime = await context.ShowTimes.AddAsync(showtimeEntity, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return showtime.Entity;
     }
