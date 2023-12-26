@@ -10,17 +10,9 @@ namespace Cinema.Showtimes.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/reservation")]
-public class ReservationController : Controller
+public class ReservationController(IMediator mediator, IActionResultMapper<ReservationController> actionResultMapper)
+    : Controller
 {
-    private readonly IMediator _mediator;
-    private readonly IActionResultMapper<ReservationController> _actionResultMapper;
-
-    public ReservationController(IMediator mediator, IActionResultMapper<ReservationController> actionResultMapper)
-    {
-        _mediator = mediator;
-        _actionResultMapper = actionResultMapper;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Reserve([FromBody] CreateReservationRequest request,
         CancellationToken cancellationToken)
@@ -29,13 +21,13 @@ public class ReservationController : Controller
         {
             var createReservationCommand =
                 new CreateReservationCommand(request.ShowtimeId, request.SelectedSeats.MapToEntity());
-            var result = await _mediator.Send<ReservedTicketResponse>(createReservationCommand, cancellationToken);
+            var result = await mediator.Send<ReservedTicketResponse>(createReservationCommand, cancellationToken);
 
             return Ok(result);
         }
         catch (Exception exception)
         {
-            return _actionResultMapper.Map(exception);
+            return actionResultMapper.Map(exception);
         }
     }
 
@@ -44,11 +36,11 @@ public class ReservationController : Controller
     {
         try
         {
-            await _mediator.Send(new ConfirmReservationPaymentCommand(reservationId), cancellationToken);
+            await mediator.Send(new ConfirmReservationPaymentCommand(reservationId), cancellationToken);
         }
         catch (Exception exception)
         {
-            return _actionResultMapper.Map(exception);
+            return actionResultMapper.Map(exception);
         }
 
         return Ok();

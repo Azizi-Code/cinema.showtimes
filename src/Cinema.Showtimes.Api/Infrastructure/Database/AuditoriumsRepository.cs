@@ -4,25 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Showtimes.Api.Infrastructure.Database;
 
-public class AuditoriumsRepository : IAuditoriumsRepository
+public class AuditoriumsRepository(CinemaContext context) : IAuditoriumsRepository
 {
-    private readonly CinemaContext _context;
-
-    public AuditoriumsRepository(CinemaContext context)
-    {
-        _context = context;
-    }
-
     public async Task<AuditoriumEntity?> GetWithSeatsByIdAsync(int auditoriumId, CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums
+        return await context.Auditoriums
             .Include(x => x.Seats)
             .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancellationToken);
     }
 
     public async Task<AuditoriumEntity?> GetByIdAsync(int auditoriumId, CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums
+        return await context.Auditoriums
             .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancellationToken);
     }
 }

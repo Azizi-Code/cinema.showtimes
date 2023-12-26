@@ -3,21 +3,14 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Cinema.Showtimes.Api.Application.HealthChecks;
 
-public class MovieApiCustomHealthCheck : IHealthCheck
+public class MovieApiCustomHealthCheck(IMoviesApiClient movieApiClient) : IHealthCheck
 {
-    private readonly IMoviesApiClient _movieApiClient;
-
-    public MovieApiCustomHealthCheck(IMoviesApiClient movieApiClient)
-    {
-        _movieApiClient = movieApiClient;
-    }
-
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
         CancellationToken cancellationToken = new())
     {
         try
         {
-            await _movieApiClient.GetByIdAsync(string.Empty, cancellationToken);
+            await movieApiClient.GetByIdAsync(string.Empty, cancellationToken);
             return HealthCheckResult.Healthy();
         }
         catch (Exception exception)

@@ -1,15 +1,8 @@
 namespace Cinema.Showtimes.Api.Application.Requests;
 
-public class CreateShowtimeRequest
+public class CreateShowtimeRequest(int auditoriumId, int movieId, DateTime sessionDate)
 {
-    public int AuditoriumId { get; }
-    public int MovieId { get; }
-    public DateTime SessionDate { get; }
-
-    public CreateShowtimeRequest(int auditoriumId, int movieId, DateTime sessionDate)
-    {
-        AuditoriumId = auditoriumId;
-        MovieId = movieId;
-        SessionDate = sessionDate;
-    }
+    public int AuditoriumId { get; } = auditoriumId;
+    public int MovieId { get; } = movieId;
+    public DateTime SessionDate { get; } = sessionDate;
 }

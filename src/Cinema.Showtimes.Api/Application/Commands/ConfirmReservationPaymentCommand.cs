@@ -2,12 +2,7 @@ using MediatR;
 
 namespace Cinema.Showtimes.Api.Application.Commands;
 
-public class ConfirmReservationPaymentCommand : IRequest
+public class ConfirmReservationPaymentCommand(Guid reservationId) : IRequest
 {
-    public ConfirmReservationPaymentCommand(Guid reservationId)
-    {
-        ReservationId = reservationId;
-    }
-
-    public Guid ReservationId { get; }
+    public Guid ReservationId { get; } = reservationId;
 }

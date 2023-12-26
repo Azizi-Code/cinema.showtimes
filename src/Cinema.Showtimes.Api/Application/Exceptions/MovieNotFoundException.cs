@@ -2,9 +2,4 @@ using Cinema.Showtimes.Api.Common.BaseExceptions;
 
 namespace Cinema.Showtimes.Api.Application.Exceptions;
 
-public class MovieNotFoundException : NotFoundException
-{
-    public MovieNotFoundException(string id) : base($"Movie with id '{id}' does not exist.")
-    {
-    }
-}
+public class MovieNotFoundException(string id) : NotFoundException($"Movie with id '{id}' does not exist.");

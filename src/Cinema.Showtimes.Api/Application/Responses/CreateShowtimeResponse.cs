@@ -1,11 +1,6 @@
 namespace Cinema.Showtimes.Api.Application.Responses;
 
-public class CreateShowtimeResponse
+public class CreateShowtimeResponse(int showTimeId)
 {
-    public CreateShowtimeResponse(int showTimeId)
-    {
-        ShowTimeId = showTimeId;
-    }
-
-    public int ShowTimeId { get; }
+    public int ShowTimeId { get; } = showTimeId;
 }
